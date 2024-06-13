@@ -1,1 +1,0 @@
-../python/fix_qnet_rstrefs.py
