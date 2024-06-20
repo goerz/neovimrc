@@ -33,12 +33,11 @@ return {
             luasnip.lsp_expand(args.body)
           end,
         },
-        completion = { completeopt = 'menu,menuone,noinsert' },
+        completion = {
+          autocomplete = false,  -- activates dynamically with <C-Space> (see below)
+          completeopt = 'menu,menuone,noinsert',
+        },
 
-        -- For an understanding of why these mappings were
-        -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
           ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -54,17 +53,24 @@ return {
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
 
-          -- If you prefer more traditional completion keymaps,
-          -- you can uncomment the following lines
-          --['<CR>'] = cmp.mapping.confirm { select = true },
-          --['<Tab>'] = cmp.mapping.select_next_item(),
-          --['<S-Tab>'] = cmp.mapping.select_prev_item(),
+          -- Manually trigger / activate a completion from nvim-cmp.
+          --  Completion is off by default. When we trigger a completion with
+          --  CTRL+Space, that also switches on automatic completion...
+          ['<C-Space>'] = function()
+            cmp.complete()
+            require("libraries._cmp").toggle_autocomplete()
+          end,
+          -- ... Until we confirm a completion with "Enter".
+          ['<CR>'] = function(fallback)
+            if cmp.visible() then
+              cmp.confirm({select=true})
+              require("libraries._cmp").toggle_autocomplete()
+            else
+              fallback()
+            end
+          end,
+          -- But we can also accept completions with Tab, without deactivating auto-completion.
           ['<Tab>'] = cmp.mapping.confirm { select = true },
-
-          -- Manually trigger a completion from nvim-cmp.
-          --  Generally you don't need this, because nvim-cmp will display
-          --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
@@ -74,6 +80,7 @@ return {
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
+
           ['<C-l>'] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
@@ -94,6 +101,7 @@ return {
           { name = 'path' },
         },
       }
+
     end,
   },
 }
