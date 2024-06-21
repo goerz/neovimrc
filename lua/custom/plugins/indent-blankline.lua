@@ -7,10 +7,10 @@ return {
       require("ibl").setup {
         enabled = false,
         indent = {char = "▏"},
+        scope = { enabled = false },  -- turn on with :IBLToggleScope
       }
       vim.api.nvim_set_keymap('n', '<leader>i', ':IBLToggle<CR>', { noremap = true, silent = true, desc="Toggle indent-blankline"})
     end
   },
 }
 -- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen
-
