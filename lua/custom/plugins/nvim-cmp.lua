@@ -21,7 +21,9 @@ return {
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
     },
+
     config = function()
+
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
@@ -102,7 +104,11 @@ return {
         },
       }
 
-    end,
+      vim.api.nvim_create_user_command('AutocompleteToggle', function()
+        require("libraries._cmp").toggle_autocomplete()
+      end, {})
+
+    end,  -- config
   },
 }
 
