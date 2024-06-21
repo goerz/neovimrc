@@ -273,6 +273,16 @@ require('lazy').setup(
 },
 { -- Options for Lazy manager itself
   -- See https://github.com/folke/lazy.nvim?tab=readme-ov-file#%EF%B8%8F-configuration
+  dev = {
+    path = "~/Documents/Programming",
+    patterns = {},
+    fallback = false,
+  },
+  change_detection = {
+    -- automatically check for config file changes and reload the ui
+    enabled = true,
+    notify = false, -- way too annoying
+  },
   ui = {
     icons = {
       cmd = "⌘",
