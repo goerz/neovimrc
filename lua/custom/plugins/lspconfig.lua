@@ -148,6 +148,50 @@ return {
         -- tsserver = {},
         --
 
+        julials = {
+          cmd = {
+            "julia",
+            "--startup-file=no",
+            "--history-file=no",
+            "-e",
+            [[
+            # Load LanguageServer.jl:
+            # Attempt to load from ~/.julia/environments/nvim-lspconfig
+            # with the regular load path as a fallback
+            ls_install_path = joinpath(
+              get(DEPOT_PATH, 1, joinpath(homedir(), ".julia")),
+              "environments",
+              "nvim-lspconfig"
+            )
+            pushfirst!(LOAD_PATH, ls_install_path)
+            using LanguageServer
+            popfirst!(LOAD_PATH)
+            depot_path = get(ENV, "JULIA_DEPOT_PATH", "")\
+            project_path = let
+              dirname(
+                something(\n            ## 1. Finds an explicitly set project (JULIA_PROJECT)\n            Base.load_path_expand((\n                p = get(ENV, "JULIA_PROJECT", nothing);\n                p === nothing ? nothing : isempty(p) ? nothing : p\n            )),\n            ## 2. Look for a Project.toml file in the current working directory,\n            ##    or parent directories, with $HOME as an upper boundary\n            Base.current_project(),\n            ## 3. First entry in the load path\n            get(Base.load_path(), 1, nothing),\n            ## 4. Fallback to default global environment,\n            ##    this is more or less unreachable\n            Base.load_path_expand("@v#.#"),
+                )
+              )
+            end
+            @info "Running language server" VERSION pwd() project_path depot_path
+            server = LanguageServer.LanguageServerInstance(
+              stdin, stdout, project_path, depot_path
+            )
+            server.runlinter = true
+            run(server)
+            ]]
+          },
+          root_dir = function(fname)
+            local util = require'lspconfig.util'
+            local r = util.root_pattern 'Project.toml'(fname) or util.find_git_ancestor(fname) or util.path.dirname(fname)
+            return r
+          end,
+          on_attach = function(client, bufnr)
+            -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
+            vim.bo[bufnr].formatexpr = ''
+          end,
+        },
+
         lua_ls = {
           -- cmd = {...},
           -- filetypes = { ...},
@@ -165,6 +209,7 @@ return {
             },
           },
         },
+
       }
 
       -- Ensure the servers and tools above are installed
