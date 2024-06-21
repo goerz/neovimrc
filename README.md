@@ -39,6 +39,9 @@ Run `:Lazy reload <plugin name>`
 
 To comment out a line or block, use `,c ` in normal or visual mode.
 
+## Indentation Guides
+
+The [Indent Blankline](https://github.com/lukas-reineke/indent-blankline.nvim) plugin provides useful indentation guides. These are off by default, but can be toggled on with `,i`.
 
 ### Git (fugitive)
 

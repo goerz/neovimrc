@@ -5,7 +5,7 @@ return {
     main = "ibl",
     config = function()
       require("ibl").setup {
-        enabled = true,
+        enabled = false,
         indent = {char = "▏"},
       }
       vim.api.nvim_set_keymap('n', '<leader>i', ':IBLToggle<CR>', { noremap = true, silent = true, desc="Toggle indent-blankline"})
