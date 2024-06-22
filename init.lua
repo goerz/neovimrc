@@ -147,6 +147,9 @@ vim.opt.virtualedit = 'block'
 vim.opt.listchars = { tab = '>-', trail = '-', nbsp = '~' }
 vim.opt.list = false
 
+-- Always show signcolumn. It's too distracting to have it appear and disapper
+vim.opt.signcolumn = "yes"
+
 -- Don't wrap text by default
 vim.opt.wrap = false
 vim.opt.showbreak = '∟'
