@@ -42,7 +42,7 @@ function M.echo_diagnostic()
 			return
 		end
 
-		local diags = vim.lsp.diagnostic.get_line_diagnostics()
+		local diags = vim.diagnostic.get(0, {lnum = vim.api.nvim_win_get_cursor(0)[1] - 1})
 
 		if #diags == 0 then
 			-- If we previously echo'd a message, clear it out by echoing an empty
