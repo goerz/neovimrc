@@ -28,7 +28,7 @@ return {
                 .. "- Assume that you are talking to an expert unix user comfortable with working on the command line.\n"
                 .. "- Assume that the user is an expert programmer. When generating code, only add necessary comments.\n"
                 .. "- Don't elide any code from your output if the answer requires coding.\n"
-                .. "- You are talking to a computational physicist.\n",
+                .. "- You are talking to a computational physicist who programs in Julia, Fortran, and Python.\n",
             },
             {
               name = "ChatGPT3-5",
@@ -45,7 +45,7 @@ return {
                 .. "- Assume that you are talking to an expert unix user comfortable with working on the command line.\n"
                 .. "- Assume that the user is an expert programmer. When generating code, only add necessary comments.\n"
                 .. "- Don't elide any code from your output if the answer requires coding.\n"
-                .. "- You are talking to a computational physicist.\n",
+                .. "- You are talking to a computational physicist who programs in Julia, Fortran, and Python.\n",
             },
             {
               name = "CodeGPT4",
