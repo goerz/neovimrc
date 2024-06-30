@@ -1,6 +1,6 @@
 return {
   {
-    "robitx/gp.nvim",
+    "goerz/gp.nvim",
     event = "VeryLazy",
     config = function()
 
