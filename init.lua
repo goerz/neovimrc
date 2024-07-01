@@ -259,7 +259,6 @@ vim.g.have_nerd_font = false  -- some plugins may use this
 -- * Align to mark 'a
 -- * LaTeX
 -- * jupytext (rewrite)
--- * Goyo
 -- * Snippets
 -- * termguicolors?
 -- * "Human" text with better statusline
