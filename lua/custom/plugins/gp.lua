@@ -12,6 +12,7 @@ return {
           chat_user_prefix = "🧑:",
           chat_shortcut_stop = { modes = { "n", "i", "v", "x" }, shortcut = "<C-g>." },
           command_auto_select_response = false,
+          chat_conceal_model_params = false,
           agents = {
             {
               name = "ChatGPT4",
