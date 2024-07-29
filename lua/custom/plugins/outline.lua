@@ -225,10 +225,17 @@ return {
         -- You can use a custom function that returns the icon for each symbol kind.
         -- This function takes a kind (string) as parameter and should return an
         -- icon as string.
-        icon_fetcher = nil,
+        icon_fetcher = function(k)
+          local ft = vim.api.nvim_buf_get_option(require('outline').current.code.buf, "ft")
+          if ft == 'markdown' and k == 'String' then
+            -- markdown only has Strings (for headings)
+            return ""
+          end
+          return false
+        end,
         -- 3rd party source for fetching icons. Fallback if icon_fetcher returned
         -- empty string. Currently supported values: 'lspkind'
-        icon_source = nil,
+        -- icon_source = "lspkind",
         -- The next fallback if both icon_fetcher and icon_source has failed, is
         -- the custom mapping of icons specified below. The icons table is also
         -- needed for specifying hl group.
