@@ -32,11 +32,11 @@ return {
                 .. "- You are talking to a computational physicist who programs in Julia, Fortran, and Python.\n",
             },
             {
-              name = "ChatGPT3-5",
+              name = "ChatGPT4o-Mini",
               chat = true,
               command = false,
               -- string with model name or table with model name and parameters
-              model = { model = "gpt-3.5-turbo-0125", temperature = 1.1, top_p = 1 },
+              model = { model = "gpt-4o-mini", temperature = 1.1, top_p = 1 },
               -- system prompt (use this to specify the persona/role of the AI)
               system_prompt = "You are a general AI assistant.\n\n"
                 .. "Follow these instructions when responding:\n\n"
@@ -60,11 +60,11 @@ return {
                 .. "START AND END YOUR ANSWER WITH:\n\n```",
             },
             {
-              name = "CodeGPT3-5",
+              name = "CodeGPT4o-Mini",
               chat = false,
               command = true,
               -- string with model name or table with model name and parameters
-              model = { model = "gpt-3.5-turbo-0125", temperature = 0.8, top_p = 1 },
+              model = { model = "gpt-4o-mini", temperature = 0.8, top_p = 1 },
               -- system prompt (use this to specify the persona/role of the AI)
               system_prompt = "You are an AI working as a code editor.\n\n"
                 .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
@@ -130,9 +130,9 @@ return {
               end
               vim.api.nvim_command("diffthis")
               -- vim.api.nvim_out_write(vim.inspect(params)) -- DEBUG
-              local model = "gpt-3.5-turbo-0125"
+              local model = "gpt-4o-mini"
               for _, arg in ipairs(params.fargs) do
-                if arg:match("gpt") and arg:match("4") then
+                if arg:match("gpt") and arg:match("4") and not arg:match("mini") then
                   model = "gpt-4o"
                 end
               end
