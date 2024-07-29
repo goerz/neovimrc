@@ -10,6 +10,9 @@ return {
       },
       indent = {
         enable = true,
+        disable = {
+          "julia",  -- messes up, better to use patched julia-vim/indent/julia.vim
+        }
       },
       incremental_selection = {
         enable = false,
@@ -25,4 +28,4 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen
+-- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofenz
