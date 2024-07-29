@@ -6,6 +6,7 @@ setlocal shiftwidth=4
 setlocal shiftround
 setlocal expandtab
 setlocal wrap
+setlocal conceallevel=0
 
 let b:showwordcount=1
 
@@ -16,4 +17,4 @@ setlocal spell
 " you moved it horizontally beyond the first half screen horizontally
 setlocal sidescrolloff=1000
 
-noremap <silent> <leader>t :Voom markdown<CR>:vertical resize 80<CR>
+" noremap <silent> <leader>t :Voom markdown<CR>:vertical resize 80<CR>
