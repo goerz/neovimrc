@@ -166,11 +166,13 @@ return {
       end
 
       -- Chat commands
-      vim.keymap.set({"n", "i"}, "<C-g>c", "<cmd>GpChatToggle<cr>", keymapOptions("Toggle Chat"))
+      vim.keymap.set({"n", "i"}, "<C-g>c", "<cmd>GpChatNew vsplit<cr>", keymapOptions("Create Chat"))
+      vim.keymap.set({"n", "i"}, "<C-g>t", "<cmd>GpChatToggle<cr>", keymapOptions("Toggle Chat"))
       vim.keymap.set({"n", "i"}, "<C-g>f", "<cmd>GpChatFinder<cr>", keymapOptions("Chat Finder"))
 
       vim.keymap.set("v", "<C-g>p", ":<C-u>'<,'>GpChatPaste<cr>", keymapOptions("Visual Chat Paste"))
-      vim.keymap.set("v", "<C-g>c", ":<C-u>'<,'>GpChatToggle<cr>", keymapOptions("Visual Toggle Chat"))
+      vim.keymap.set("v", "<C-g>c", ":<C-u>'<,'>GpChatNew vsplit<cr>", keymapOptions("Visual Create Chat"))
+      vim.keymap.set("v", "<C-g>t", ":<C-u>'<,'>GpChatToggle<cr>", keymapOptions("Visual Toggle Chat"))
 
       -- Prompt commands
       vim.keymap.set({"n", "i"}, "<C-g>r", "<cmd>GpRewrite<cr>", keymapOptions("Inline Rewrite"))
