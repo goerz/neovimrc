@@ -49,9 +49,9 @@ Use `,ga` to stage the current file with all changes. Create a commit with `,gc`
 
 Integration with [ChatGPT](https://chatgpt.com) or more specifically the [OpenAI API](https://platform.openai.com) is provided by the [GP.nvim](https://github.com/Robitx/gp.nvim) plugin.
 
-The ChatGPT functionality uses the `ctrl-g` prefix. Most importantly, `ctrl-g c` toggles on a Chat window in a vertical split.
+The ChatGPT functionality uses the `ctrl-g` prefix. Most importantly, `ctrl-g c` opens a new Chat window in a vertical split.
 
-There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-3) or `ctrl-g shift-s` (GPT-4, better but more expensive) that performs grammar and spell checking in a diffed split.
+There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-4o-mini) or `ctrl-g shift-s` (GPT-4o, possibly better but more expensive) that performs grammar and spell checking in a diffed split.
 
 
 ### Autocompletion
