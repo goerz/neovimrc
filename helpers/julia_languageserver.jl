@@ -29,6 +29,8 @@ function is_instantiated(path; project_filename="Project.toml")
         end
     elseif isfile(path)
         return is_instantiated(dirname(path); project_filename=basename(path))
+    else
+        return false
     end
 end
 
