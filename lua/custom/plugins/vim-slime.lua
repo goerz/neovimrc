@@ -1,6 +1,6 @@
 return {
   { -- vim-slime plugin
-    'jpalardy/vim-slime',
+    'goerz/vim-slime',
     config = function()
       vim.g.slime_target = 'tmux'
       vim.g.slime_no_mappings = 1
