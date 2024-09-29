@@ -166,6 +166,7 @@ return {
       end
 
       -- Chat commands
+      vim.keymap.set({"n", "i"}, "<C-g>C", "<cmd>GpChatNew<cr>", keymapOptions("Create Fullscreen Chat"))
       vim.keymap.set({"n", "i"}, "<C-g>c", "<cmd>GpChatNew vsplit<cr>", keymapOptions("Create Chat"))
       vim.keymap.set({"n", "i"}, "<C-g>t", "<cmd>GpChatToggle<cr>", keymapOptions("Toggle Chat"))
       vim.keymap.set({"n", "i"}, "<C-g>f", "<cmd>GpChatFinder<cr>", keymapOptions("Chat Finder"))
