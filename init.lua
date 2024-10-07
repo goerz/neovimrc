@@ -69,18 +69,8 @@ vim.opt.spelllang = 'en_us'
 -- https://github.com/neovim/neovim/issues/416
 vim.api.nvim_del_keymap('n', 'Y')
 
--- Mouse toggle function and mapping
-vim.opt.mouse = ''
-vim.api.nvim_set_keymap('n', '<Leader>m', ':lua ToggleMouse()<CR>', { noremap = true, silent = true, desc="Toggle mouse"})
-function ToggleMouse()
-  if next(vim.opt.mouse:get()) == nil then  -- table is empty
-    vim.opt.mouse = 'a'
-    print('Mouse enabled')
-  else
-    vim.opt.mouse = ''
-    print('Mouse disabled')
-  end
-end
+-- Mouse support
+vim.opt.mouse = 'a'
 
 -- Windowing commands and vertical splits
 vim.opt.splitright = true
