@@ -23,13 +23,19 @@ vim.g.maplocalleader = '\\'  -- for filetype plugin shortcuts
 -- Enable per-directory .vimrc files
 vim.opt.exrc = true
 
--- Do not sync clipboard between OS and Neovim.
+-- Do not sync default register with clipboard.
 -- Otherwise, I can't do things like `ci"<cmd-v>` to change the content of a
 -- string to the text in the clipboard (`ci"` would overwrite the clipboard)
--- yank into the */+ registers to copy text to the OS clipboard
--- E.g., select region visually, then hit `"*Y` to copy the complete selected
--- lines to the clipboard. (Capital Y! Small y yanks the exact selected range)
+-- yank into the */+ registers to copy text to the OS clipboard.
 vim.opt.clipboard = ''
+-- For visual selections, we set up special keymaps that copy *both* to the
+-- primary register and the clipboard registers
+vim.keymap.set('v', 'y', function()
+  vim.cmd('normal! "+y')
+  vim.cmd('normal! "*y')
+end, { noremap = true, silent = true })
+vim.keymap.set('v', 'Y', ':yank<CR>gv:yank*<CR>', { noremap = true, silent = true })
+
 
 -- Persistent undo
 local undodir = vim.fn.stdpath('data') .. '/undo'
