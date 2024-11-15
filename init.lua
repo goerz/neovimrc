@@ -308,4 +308,31 @@ require('lazy').setup(
 
 vim.cmd.colorscheme "goerz"
 
+-- [[ Neovide ]]
+
+vim.o.guifont = "JuliaMono:h12"
+if vim.g.neovide then
+  vim.g.neovide_cursor_animation_length = 0
+  vim.g.neovide_scroll_animation_length = 0
+  vim.api.nvim_set_keymap('n', '<D-s>', ':w<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('v', '<D-c>', '"*y', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-v>', '"*P', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('v', '<D-v>', '"*P', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('c', '<D-v>', '<C-R>*', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-v>', '<ESC>l"*Plie', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-a>', 'gg0vG$', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-a>', '<ESC><ESC>gg0vG$', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-t>', ':tabnew<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-t>', '<ESC><ESC>:tabnew<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-w>', ':tabclose<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-w>', '<ESC><ESC>:tabclose<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-}>', ':tabnext<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-}>', '<ESC><ESC>:tabnext<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-{>', ':tabprevious<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-{>', '<ESC><ESC>:tabprevious<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-q>', ':qa<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('i', '<D-q>', '<ESC><ESC>:qa<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("n", "<D-n>", ":silent exec '!/Applications/Neovide.app/Contents/MacOS/neovide'<cr>", { noremap = true, silent = true })
+end
+
 -- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen
