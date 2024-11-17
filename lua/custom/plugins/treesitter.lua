@@ -3,7 +3,7 @@ return {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'julia', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'julia', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'comment' },
       auto_install = false,
       highlight = {
         enable = true,
@@ -28,4 +28,4 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofenz
+-- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen
