@@ -187,7 +187,8 @@ vim.api.nvim_set_keymap('v', 'j', 'gj', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 'k', 'gk', { noremap = true, silent = true })
 
 -- In visual mode, paste without cutting selected text
-vim.api.nvim_set_keymap('v', 'p', '"_dP', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('x', 'p', '"_dP', { noremap = true, silent = true })
+-- only in visual mode, not select mode: https://github.com/L3MON4D3/LuaSnip/issues/748
 
 -- When editing a file, always jump to the last known cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {

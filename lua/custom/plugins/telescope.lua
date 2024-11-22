@@ -4,6 +4,8 @@ return {
     event = 'VimEnter',
     branch = '0.1.x',
     dependencies = {
+      'L3MON4D3/LuaSnip',  -- see separate configuration
+      'benfowler/telescope-luasnip.nvim',
       'nvim-lua/plenary.nvim', --  Lua module for asynchronous programming using coroutines
       { -- Use native port of `fzf` command line program
         'nvim-telescope/telescope-fzf-native.nvim',
@@ -33,9 +35,6 @@ return {
         defaults = {
           mappings = {
             i = {
-              -- ["<C-j>"] = actions.move_selection_next,
-              --    - conflicts with my tmux key, so we'll just have to stick to the defalt <C-n> or arrow keys
-              ["<C-k>"] = actions.move_selection_previous,
               --  From CTRL-P plugin, and it's easier to reach than the default <C-p>
               ["<C-o>h"] = actions.select_horizontal,  -- From CTRL-P, but needs to be typed quickly
               ["<C-o>v"] = actions.select_vertical,    -- From CTRL-P, but needs to be typed quickly
@@ -46,6 +45,7 @@ return {
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      require('telescope').load_extension('luasnip')
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<c-p>', builtin.find_files, { desc = 'Search Files' })
@@ -56,7 +56,8 @@ return {
       vim.keymap.set('n', '<c-f>d', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
       vim.keymap.set('n', '<c-f>.', builtin.oldfiles, { desc = '[F]ind recent Files ("." for repeat)' })
       vim.keymap.set('n', '<c-f>b', builtin.buffers, { desc = '[F]ind existing [B]uffers' })
-      vim.keymap.set('n', '<c-f>/', builtin.current_buffer_fuzzy_find, { desc = '[Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<c-f>/', builtin.current_buffer_fuzzy_find, { desc = 'Fuzzily search in current buffer' })
+      vim.keymap.set('n', '<c-f>s', require('telescope').extensions.luasnip.luasnip, { desc = '[F]Find [S]nippets' })
       vim.keymap.set('n', '<c-f>k',
         function()
           builtin.keymaps {

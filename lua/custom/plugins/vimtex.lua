@@ -4,6 +4,7 @@ return {
     tag = "v2.15",
     init = function()
       vim.g.vimtex_view_method = "general"
+      vim.g.vimtex_imaps_enabled = 0
     end
   }
 }

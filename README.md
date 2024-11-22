@@ -58,6 +58,21 @@ There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-
 
 cmp: ctrl-space activates, enter deactivates.
 
+Use `:AutoCompleteToggle` to switch auto-completion on or off.
+
+
+### Snippets
+
+Snippets are handled by [LuaSnip](https://github.com/L3MON4D3/LuaSnip). The snippet files are organized by file type in the `./luasnippets/` folder.
+
+Shortcuts are in insert mode:
+
+* `ctrl-k` to complete a snippet or to jump foward
+* `ctrl-b` or `ctrl-j` to jump backward. Note that the latter conflicts with my tmux leader key, and thus usually requires a second `j` press.
+* `ctrl-e` to switch between "choice nodes"
+
+Alternatively, in normal mode, use Telescope (`ctrl-f s`, `:Telescope luasnip`) to find and insert a snippet.
+
 
 ### Telescope
 
@@ -68,6 +83,7 @@ Telescope is mapped to `ctrl-f`. Typing `ctrl-f` by itself shows the telescope s
 * `ctrl-f k` - Find Keymap
 * `ctrl-f d` - Find LSP diagnostics
 * `ctrl-f b` - Find Buffers
+* `ctrl-f s` - Find snippets
 
 etc. (use `ctrl-f k` to find all keymaps)
 
