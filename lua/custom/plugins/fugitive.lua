@@ -4,9 +4,9 @@ return {
   keys = {
     { "<Leader>gd", ":Gvdiffsplit<CR>", desc = "git diff" },
     { "<Leader>gD", ":Gvdiffsplit HEAD<CR>", desc = "git diff (HEAD)" },
-    { "<Leader>gs", ":Gstatus<CR>", desc = "git status" },
+    { "<Leader>gs", ":Git status<CR>", desc = "git status" },
     { "<Leader>ga", ":Gwrite<CR>", desc = "git add" },
-    { "<Leader>gc", ":Gcommit<CR>", desc = "git commit" },
+    { "<Leader>gc", ":Git commit<CR>", desc = "git commit" },
     { "<Leader>gb", ":Git blame<CR>", desc = "git blame" },
   },
   cmd = { "Git"},
