@@ -267,8 +267,8 @@ vim.g.have_nerd_font = false  -- some plugins may use this
 --    :Lazy
 --
 require('lazy').setup(
-{ -- Plugins are loaded from lua/custom/plugins folder
-  import = "custom/plugins"
+{ -- Plugins are loaded from lua/plugins folder
+  import = "plugins"
 },
 { -- Options for Lazy manager itself
   -- See https://github.com/folke/lazy.nvim?tab=readme-ov-file#%EF%B8%8F-configuration

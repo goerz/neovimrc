@@ -23,7 +23,7 @@ Update at any time by running `git pull` inside the `~/.config/nvim` folder.
 ### Plugin management
 
 Plugins are managed via [Lazy](https://github.com/folke/lazy.nvim). I keep the
-configuration for each plugin in the subfolder `./lua/custom/plugins/`.
+configuration for each plugin in the subfolder `./lua/plugins/`.
 
 Run `:Lazy` to open the plugin manager.
 
@@ -91,3 +91,9 @@ Telescope replaces the [ctrlp.vim](https://github.com/kien/ctrlp.vim) plugin I w
 
 
 ### LSP
+
+<!-- TODO -->
+
+### Outlines
+
+<!-- TODO -->
