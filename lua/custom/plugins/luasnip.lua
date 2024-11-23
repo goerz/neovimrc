@@ -6,29 +6,22 @@ return {
     config = function()
 
       local ls = require("luasnip")
-      local types = require("luasnip.util.types")
       ls.setup({
         keep_roots = true,
         link_roots = true,
         link_children = true,
         update_events = "TextChanged,TextChangedI",
         delete_check_events = "TextChanged",
-        ext_opts = {
-          [types.choiceNode] = {
-            active = {
-              virt_text = { { "choiceNode", "Comment" } },
-            },
-          },
-        },
-        -- treesitter-hl has 100, use something higher (default is 200).
-        ext_base_prio = 300,
-        -- minimal increase in priority.
-        ext_prio_increase = 1,
         enable_autosnippets = false,
       })
 
-      -- "Select mode" is what luasnip ends up in when snippets contain placeholder text
-      vim.keymap.set({ "i", "s" }, "<C-K>",
+      -- # Keybindings
+      --
+      -- Note: "Select mode" is what luasnip ends up in when snippets contain
+      -- placeholder text
+      --
+
+      vim.keymap.set({ "i", "s" }, "<C-k>",
         function()
           if ls.expand_or_locally_jumpable() then
             ls.expand_or_jump()
@@ -36,25 +29,40 @@ return {
         end,
         { desc = "Expand or jump forward in lua-snippet", silent = true })
 
-      vim.keymap.set({ "i", "s" }, "<C-J>", function()
+      if os.getenv("TMUX") then
+        -- I use ctrl-j as my tmux prefix key, so that makes the shortcut
+        -- `ctrl-j j`
+        vim.keymap.set({ "i", "s" }, "<C-j>", function()
+          if ls.jumpable(-1) then
+            ls.jump(-1)
+          end
+        end, { desc = "Jump backward in lua-snippet", silent = true })
+      else
+        -- If we're not in TMUX, we still want `ctrl-j j`, so the same key
+        -- combination always works
+        vim.keymap.set({ "i", "s" }, "<C-j>j", function()
+          if ls.jumpable(-1) then
+            ls.jump(-1)
+          end
+        end, { desc = "Jump backward in lua-snippet", silent = true })
+      end
+
+      vim.keymap.set({ "i", "s" }, "<C-b>", function()
+        -- An additional shortcut if the conflict with the TMUX prefix key
+        -- becomes too much to deal with. May be removed in the future.
         if ls.jumpable(-1) then
           ls.jump(-1)
         end
       end, { desc = "Jump backward in lua-snippet", silent = true })
 
-      vim.keymap.set({ "i", "s" }, "<C-B>", function()
-        if ls.jumpable(-1) then
-          ls.jump(-1)
-        end
-      end, { desc = "Jump backward in lua-snippet", silent = true })
-
-      vim.keymap.set({"i", "s"}, "<C-E>", function()
+      vim.keymap.set({"i", "s"}, "<C-e>", function()
         if ls.choice_active() then
           ls.change_choice(1)
         end
       end, { desc = "Switch between choices in lua-snippet", silent = true})
 
-      require("luasnip.loaders.from_lua").load() -- load from ~/.config/nvim/luasnippets
+      require("luasnip.loaders.from_lua").load()
+      -- load snippet from ~/.config/nvim/luasnippets
 
     end,  -- config
 

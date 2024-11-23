@@ -68,7 +68,7 @@ Snippets are handled by [LuaSnip](https://github.com/L3MON4D3/LuaSnip). The snip
 Shortcuts are in insert mode:
 
 * `ctrl-k` to complete a snippet or to jump foward
-* `ctrl-b` or `ctrl-j` to jump backward. Note that the latter conflicts with my tmux leader key, and thus usually requires a second `j` press.
+* `ctrl-j j` to jump backward. This is set up under the assumption that if running inside tmux (TMUX env variable exists), `ctrl-j` is the Tmux prefix key. Experimental: `ctrl-b` can also be used to jump back
 * `ctrl-e` to switch between "choice nodes"
 
 Alternatively, in normal mode, use Telescope (`ctrl-f s`, `:Telescope luasnip`) to find and insert a snippet.
