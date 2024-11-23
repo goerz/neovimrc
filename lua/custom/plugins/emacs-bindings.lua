@@ -1,8 +1,9 @@
 return {
   { -- Basic Emacs bindings
     'goerz/emacs-bindings.nvim',
-    config = function()
-      vim.g.emacs_bindings_modes = 'ic' -- Enables bindings for insert and command modes
+    init = function()
+      vim.g.emacs_bindings_modes = 'c' -- Enables bindings for command modes
+      -- Do not enable for insert mode! This will conflict with LuaSnip bindings
     end
   },
 }
