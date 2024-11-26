@@ -22,9 +22,11 @@ setlocal formatprg=cat
 " Tex files can use spell checking
 setlocal spell
 
-noremap <silent> <leader>t :Voom latex<CR>:vertical resize 80<CR>
-"Forward SyncTeX
-nnoremap <leader>s :w<CR>:silent !$SYNCTEXREADER -g <C-r>=line('.')<CR> %<.pdf %<CR><C-l>
+" Forward SyncTeX (override vim-slime)
+nnoremap <buffer> <leader>s :w<CR>:silent !$SYNCTEXREADER -g <C-r>=line('.')<CR> %<.pdf %<CR><C-l>
+
+" Open outline (override outline.nvim)
+nnoremap <buffer> go <Plug>(vimtex-toc-open)
 
 " Extra highlighting
 hi! texSectionTitle gui=underline term=bold cterm=underline,bold

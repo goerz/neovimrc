@@ -30,28 +30,13 @@ Run `:Lazy` to open the plugin manager.
 Run `:Lazy reload <plugin name>`.
 
 
-### Commenting
+### Treesitter
 
-To comment out a line or block, use `,c ` in normal or visual mode.
+Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](https://github.com/nvim-treesitter/nvim-treesitter) sets up which parsers are installed, and which Treesitter features are used for particular filetypes. The plugin also provides the queries that connect between the syntax tree and highlight groups. These queries may be customized in the `./queries` (replacing existing queries) and `./after/queries/` (extending existing queries) folders.
 
-## Indentation Guides
+When treesitter is active, use `:InspectTree` to see the parser tree, and to develop or debug queries.
 
-The [Indent Blankline](https://github.com/lukas-reineke/indent-blankline.nvim) plugin provides useful indentation guides. These are off by default but can be toggled on with `,i`.
-
-### Git (fugitive)
-
-Use `,gd` to "git diff" the current file in such a way that editing the fugitive buffer stages the changes. This is the primary way in which stage commits on a line-by-line basis.
-
-Use `,ga` to stage the current file with all changes. Create a commit with `,gc`.
-
-
-### ChatGPT Integration
-
-Integration with [ChatGPT](https://chatgpt.com) or more specifically the [OpenAI API](https://platform.openai.com) is provided by the [GP.nvim](https://github.com/Robitx/gp.nvim) plugin.
-
-The ChatGPT functionality uses the `ctrl-g` prefix. Most importantly, `ctrl-g c` opens a new Chat window in a vertical split.
-
-There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-4o-mini) or `ctrl-g shift-s` (GPT-4o, possibly better but more expensive) that performs grammar and spell checking in a diffed split.
+Textobjects…
 
 
 ### Autocompletion
@@ -67,7 +52,7 @@ Snippets are handled by [LuaSnip](https://github.com/L3MON4D3/LuaSnip). The snip
 
 Shortcuts are in insert mode:
 
-* `ctrl-k` to complete a snippet or to jump foward
+* `ctrl-k` to complete a snippet or to jump forward
 * `ctrl-j j` to jump backward. This is set up under the assumption that if running inside tmux (TMUX env variable exists), `ctrl-j` is the Tmux prefix key. Experimental: `ctrl-b` can also be used to jump back
 * `ctrl-e` to switch between "choice nodes"
 
@@ -96,4 +81,55 @@ Telescope replaces the [ctrlp.vim](https://github.com/kien/ctrlp.vim) plugin I w
 
 ### Outlines
 
-<!-- TODO -->
+Outlines are generally provided by the [`outline.nvim` plugin](https://github.com/hedyhli/outline.nvim). The shortcut to open the outline is `go`.
+
+### Commenting
+
+To comment out a line or block, use `,c ` in normal or visual mode.
+
+## Indentation Guides
+
+The [Indent Blankline](https://github.com/lukas-reineke/indent-blankline.nvim) plugin provides useful indentation guides. These are off by default but can be toggled on with `,i`.
+
+### Git (fugitive)
+
+Use `,gd` to "git diff" the current file in such a way that editing the fugitive buffer stages the changes. This is the primary way in which stage commits on a line-by-line basis.
+
+Use `,ga` to stage the current file with all changes. Create a commit with `,gc`.
+
+
+### ChatGPT Integration
+
+Integration with [ChatGPT](https://chatgpt.com) or more specifically the [OpenAI API](https://platform.openai.com) is provided by the [GP.nvim](https://github.com/Robitx/gp.nvim) plugin.
+
+The ChatGPT functionality uses the `ctrl-g` prefix. Most importantly, `ctrl-g c` opens a new Chat window in a vertical split.
+
+There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-4o-mini) or `ctrl-g shift-s` (GPT-4o, possibly better but more expensive) that performs grammar and spell checking in a diffed split.
+
+
+### LaTeX
+
+LaTeX support is via [vimtex](https://github.com/lervag/vimtex).
+
+Start continuous compilation with `:VimtexCompile` (stop with `:VimtexStop`). View the outline with `go`. This is a buffer-local mapping equivalent to `\lt` using the outline provided by vimex, instead of the outline plugin.
+
+Omni-completion (`<ctrl-x><ctr-o>`) is available to complete, e.g., citation keys.
+
+Insert-mode keymaps are disabled, we use LuaSnip instead.
+
+Jumping to the PDF is done with the `,s` shortcut. This is a buffer-local mapping. Usually, `,s` is use for slime-send. In Skim (my PDF viewer on macOS), to go back from the PDF to the source code, under the assumption that nvim is running inside tmux, use `ctrl-shift` with a double-click. This is a Skim feature, though, and relies on a custom setup to interact with tmux.
+
+The `vimtex` plugin provides the following text objects in addition to the default (`:help text-objects`) ones:
+
+* `ic`/`ac`: in/around command
+* `ie`/`ae`: in/around environment
+* `id`/`ad`: in/around delimiter (parenthesis with `\left`/`\right`)
+* `im`/`am`: in/around item
+* `i$`/`a$`: in/around math (all of `$`, `$$`, `\(\)`
+
+
+### Julia
+
+Julia support is provided by the [`julia-vim` plugin](https://github.com/JuliaEditorSupport/julia-vim). Most importantly, it enables LaTeX-to-Unicode via tab key. Since this is extremely useful even outside of Julia, this feature of the plugin is active in some other filetypes as well (like markdown), and can be activated with `,l` in other buffers.
+
+We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc.

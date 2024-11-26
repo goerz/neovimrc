@@ -57,11 +57,12 @@ return {
   ls.snippet({trig="eq", dscr="Insert an equation"},
     fmta(
       [[
-        \begin{equation}
-            <>
+        \begin{equation}%
+          \label{eq:<>}
+          <>
         \end{equation}
       ]],
-      { i(1) }
+      { i(1), i(2) }
     )
   ),
 
@@ -69,10 +70,47 @@ return {
     fmta(
       [[
       \begin{<>}
-          <>
+        <>
       \end{<>}
       ]],
       { i(1), i(2), rep(1), }
+    )
+  ),
+
+  ls.snippet({trig="fig", dscr="Insert an figure"},
+    fmta(
+      [[
+        \begin{figure}[tb]
+          \centering
+          \includegraphics{<>}
+          \caption{%
+            <>
+          }
+          \label{fig:<>}
+        \end{figure}
+      ]],
+      { i(1), i(2), i(3) }
+    )
+  ),
+
+  ls.snippet({trig="table", dscr="Insert an table"},
+    fmta(
+      [[
+        \begin{table}[tb]
+          \centering
+          \begin{tabular}{l|c|r}
+            \toprule
+            <>
+            \midrule
+            \bottomrule
+          \end{tabular}
+          \caption{%
+            <>
+          }
+          \label{tab:<>}
+        \end{table}
+      ]],
+      { i(1), i(2), i(3) }
     )
   ),
 
