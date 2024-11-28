@@ -74,6 +74,34 @@ return {
 
       })
 
+      -- Function to set diagnostics in the quickfix list
+      local function set_diagnostics_in_quickfix()
+        local diagnostics = vim.diagnostic.get()
+        local quickfix_list = {}
+
+        for _, diag in ipairs(diagnostics) do
+          table.insert(quickfix_list, {
+            bufnr = diag.bufnr,
+            lnum = diag.lnum + 1,  -- Neovim uses 0-indexed positions, so we adjust it
+            col = diag.col + 1,    -- Adjust for 0-indexing
+            text = diag.message,
+            type = diag.severity == vim.diagnostic.severity.ERROR and 'E'
+                  or diag.severity == vim.diagnostic.severity.WARN and 'W'
+                  or 'I',  -- Default to 'I' for other types
+          })
+        end
+
+        vim.fn.setqflist({}, ' ', { -- creates a new quickfix list
+          title = 'LSP Diagnostics',
+          items = quickfix_list,
+        })
+      end
+
+      -- Autocmd to update the quickfix list whenever diagnostics change
+      vim.api.nvim_create_autocmd('DiagnosticChanged', {
+        callback = set_diagnostics_in_quickfix,
+      })
+
       -- LSP servers and clients are able to communicate to each other what features they support.
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
@@ -81,15 +109,18 @@ return {
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-        vim.lsp.diagnostic.on_publish_diagnostics,
+      vim.diagnostic.config(
         {
           virtual_text = false, -- Too distracting. Instead, we'll echo diagnostics in the command line bar (see below)
           signs = true,
           update_in_insert = false,
           underline = true,
         }
-     )
+      )
+
+      -- Prevent LSP from overwriting treesitter color settings
+      -- https://github.com/NvChad/NvChad/issues/1907
+      vim.highlight.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
 
       -- LSPs and other tools can (but don't have to) be installed via Mason/Mason-Tool-Installer
       --
@@ -105,6 +136,8 @@ return {
           'lua_ls',  -- automatically installs tools for Lua language server
           -- Julia language server is installed manually, so we keep it ouf of Mason
           'stylua',
+          'basedpyright',
+          'ruff',
         }
       }
 
@@ -130,14 +163,31 @@ return {
       require'lspconfig'.julials.setup({
         cmd = {"julia", "--startup-file=no", "--history-file=no", julia_ls_script},
         single_file_support = true,
-        on_attach = function(client, bufnr)
+        on_attach = function(_, bufnr)
           -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
           vim.bo[bufnr].formatexpr = ''
         end,
         capabilities = capabilities,
       })
 
-      -- TODO: pyright (?)
+      require('lspconfig').basedpyright.setup({
+        filetypes = { "python" },
+        settings = {
+          basedpyright = {
+            analysis = {
+              typeCheckingMode = "off",
+            }
+          },
+        },
+        on_attach = function(client, _)
+          -- disable LSP semantic highlights (use only Treesitter)
+          client.server_capabilities.semanticTokensProvider = nil
+        end
+      })
+
+      require('lspconfig').ruff.setup({
+        filetypes = { "python" }
+      })
 
     end,  -- end of config function
 

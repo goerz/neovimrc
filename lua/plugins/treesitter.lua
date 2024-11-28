@@ -4,7 +4,7 @@ return {
     version = '0.9.3',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'julia', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'comment' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'julia', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'vim', 'vimdoc', 'comment', 'python' },
       auto_install = false,
       highlight = {
         enable = true,

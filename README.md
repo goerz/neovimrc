@@ -34,9 +34,9 @@ Run `:Lazy reload <plugin name>`.
 
 Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](https://github.com/nvim-treesitter/nvim-treesitter) sets up which parsers are installed, and which Treesitter features are used for particular filetypes. The plugin also provides the queries that connect between the syntax tree and highlight groups. These queries may be customized in the `./queries` (replacing existing queries) and `./after/queries/` (extending existing queries) folders.
 
-When treesitter is active, use `:InspectTree` to see the parser tree, and to develop or debug queries.
+When Treesitter is active, use `:InspectTree` to see the parser tree, and to develop or debug queries.
 
-Textobjects…
+<!-- Textobjects… -->
 
 
 ### Autocompletion
@@ -72,12 +72,19 @@ Telescope is mapped to `ctrl-f`. Typing `ctrl-f` by itself shows the telescope s
 
 etc. (use `ctrl-f k` to find all keymaps)
 
-Telescope replaces the [ctrlp.vim](https://github.com/kien/ctrlp.vim) plugin I was using with vim. `ctrl-p` directly searches for files. Any file can be opened in a vertical or horizontal split with `ctrl-v`/`ctrl-o v` and `ctrl-x`/`ctrl-o h`, respectively.
+Telescope replaces the [`ctrlp.vim`](https://github.com/kien/ctrlp.vim) plugin I was using with vim. `ctrl-p` directly searches for files. Any file can be opened in a vertical or horizontal split with `ctrl-v`/`ctrl-o v` and `ctrl-x`/`ctrl-o h`, respectively.
 
 
 ### LSP
 
-<!-- TODO -->
+Everything related to LSP is set up in `./lua/plugins/lspconfig.lua`. This includes auxiliary plugins like [Mason](https://github.com/williamboman/mason.nvim) and shortcut/UI customization.
+
+Use `:lua =vim.lsp.buf_get_clients()[1]` to show the first LSP client attached to the current buffer (`=` is a shortcut for `vim.print`).
+
+You can inspect various information about the LSP client/server, eg., the name or server capabilities (`:lua =vim.lsp.get_active_clients()[1].server_capabilities`).
+
+LSP Diagnostics are set up to appear in the quickfix windows (`:copen`), i.e., the window that traditionally shows the results of  `:make`.
+
 
 ### Outlines
 
@@ -100,7 +107,7 @@ Use `,ga` to stage the current file with all changes. Create a commit with `,gc`
 
 ### ChatGPT Integration
 
-Integration with [ChatGPT](https://chatgpt.com) or more specifically the [OpenAI API](https://platform.openai.com) is provided by the [GP.nvim](https://github.com/Robitx/gp.nvim) plugin.
+Integration with [ChatGPT](https://chatgpt.com) or more specifically the [OpenAI API](https://platform.openai.com) is provided by the [`GP.nvim`](https://github.com/Robitx/gp.nvim) plugin.
 
 The ChatGPT functionality uses the `ctrl-g` prefix. Most importantly, `ctrl-g c` opens a new Chat window in a vertical split.
 
@@ -109,7 +116,7 @@ There is a custom `GPCheckGrammar` command tied to the shortcut `ctrl-g s` (GPT-
 
 ### LaTeX
 
-LaTeX support is via [vimtex](https://github.com/lervag/vimtex).
+LaTeX support is via [`vimtex`](https://github.com/lervag/vimtex).
 
 Start continuous compilation with `:VimtexCompile` (stop with `:VimtexStop`). View the outline with `go`. This is a buffer-local mapping equivalent to `\lt` using the outline provided by vimex, instead of the outline plugin.
 
@@ -127,9 +134,21 @@ The `vimtex` plugin provides the following text objects in addition to the defau
 * `im`/`am`: in/around item
 * `i$`/`a$`: in/around math (all of `$`, `$$`, `\(\)`
 
+We not not use either Treesitter or LSP for LaTeX
+
+
+### Python
+
+We use two LSP servers for Python:
+
+* [`basedpyright`](https://github.com/DetachHead/basedpyright) for access to project symbols ([outlines](#outlines)!) and auto-completion. Since most of my own Python code does not use type hints, the type checking features of `basedpyright` are disabled in `./lua/plugins/lspconfig.lua`.
+* [`ruff`](https://github.com/astral-sh/ruff) for linting. Options for `ruff` should be set in the `pyproject.toml`.
+
+Both of these linters are installed through Mason.
+
 
 ### Julia
 
 Julia support is provided by the [`julia-vim` plugin](https://github.com/JuliaEditorSupport/julia-vim). Most importantly, it enables LaTeX-to-Unicode via tab key. Since this is extremely useful even outside of Julia, this feature of the plugin is active in some other filetypes as well (like markdown), and can be activated with `,l` in other buffers.
 
-We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc.
+We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc. The LSP for Julia is set up manually (not via Mason). It relies on the script in `./helpers/julia_languageserver.jl`, which in turn depends on a Julia environment in `~/.julia/environments/nvim-lspconfig` that has the [`LanguageServer`](https://github.com/julia-vscode/LanguageServer.jl) package installed.
