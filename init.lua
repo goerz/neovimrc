@@ -241,6 +241,17 @@ vim.api.nvim_create_user_command('Dark', function()
   vim.cmd('colorscheme evening')
 end, {})
 
+
+vim.api.nvim_create_user_command('LiterateOn', function()
+  require("literate").init()
+  vim.cmd("edit")
+end, {})
+
+vim.api.nvim_create_user_command('LiterateOff', function()
+  require("literate").deactivate()
+  vim.cmd("edit")
+end, {})
+
 -- Command abbreviation
 vim.cmd([[cabbr AB 'a,'b]])
 
@@ -251,12 +262,8 @@ vim.g.have_nerd_font = false  -- some plugins may use this
 -- * For some programming languages, delete trailing spaces on save
 -- * set wildmode=longest,full
 -- * go to defn of tag under the cursor (case sensitive)
--- * Tagbar replacement
--- * ALE replacements - LanguageServer, presumably
 -- * Align to mark 'a
--- * LaTeX
 -- * jupytext (rewrite)
--- * Snippets
 -- * termguicolors?
 -- * "Human" text with better statusline
 
