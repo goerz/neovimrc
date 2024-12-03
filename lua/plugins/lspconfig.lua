@@ -74,9 +74,12 @@ return {
 
       })
 
-      -- Function to set diagnostics in the quickfix list
+      -- Function to set diagnostics in the quickfix list. We limit that to
+      -- diagnostics in the current buffer. For project-wide diagnostic, use
+      -- Telescope instead (`ctrl-f d`)
       local function set_diagnostics_in_quickfix()
-        local diagnostics = vim.diagnostic.get()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local diagnostics = vim.diagnostic.get(bufnr)
         local quickfix_list = {}
 
         for _, diag in ipairs(diagnostics) do

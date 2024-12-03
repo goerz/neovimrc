@@ -83,7 +83,7 @@ Use `:lua =vim.lsp.buf_get_clients()[1]` to show the first LSP client attached t
 
 You can inspect various information about the LSP client/server, eg., the name or server capabilities (`:lua =vim.lsp.get_active_clients()[1].server_capabilities`).
 
-LSP Diagnostics are set up to appear in the quickfix windows (`:copen`), i.e., the window that traditionally shows the results of  `:make`.
+LSP Diagnostics for the local file are set up to appear in the quickfix windows (`:copen`), i.e., the window that traditionally shows the results of  `:make`. The project-wide diagnostics are better viewed through Telescope (`ctrf-f d`).
 
 
 ### Outlines
