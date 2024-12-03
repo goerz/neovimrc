@@ -36,7 +36,15 @@ Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](http
 
 When Treesitter is active, use `:InspectTree` to see the parser tree, and to develop or debug queries.
 
-<!-- Textobjects… -->
+Treesitter provides the following text objects:
+
+* `if`/`af`: in/around function
+* `ic`/`ac`: in/around class
+* `i=`/`a=`: in/around assignment (where "in" means the right-hand-side)
+* `al`: around loop
+* `aS`: around scope
+
+The `gnn` keymap starts incremental selection, repeating it increments the selection, `gnm` decrements it.
 
 
 ### Autocompletion
