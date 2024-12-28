@@ -192,6 +192,7 @@ vim.api.nvim_set_keymap('x', 'p', '"_dP', { noremap = true, silent = true })
 
 -- When editing a file, always jump to the last known cursor position
 vim.api.nvim_create_autocmd("BufReadPost", {
+  desc = "Jump to the last known cursor position after loading a file",
   callback = function()
     local mark = vim.api.nvim_buf_get_mark(0, '"')
     local lcount = vim.api.nvim_buf_line_count(0)
@@ -263,7 +264,6 @@ vim.g.have_nerd_font = false  -- some plugins may use this
 -- * set wildmode=longest,full
 -- * go to defn of tag under the cursor (case sensitive)
 -- * Align to mark 'a
--- * jupytext (rewrite)
 -- * termguicolors?
 -- * "Human" text with better statusline
 
