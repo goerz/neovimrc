@@ -78,7 +78,10 @@ Alternatively, in normal mode, use Telescope (`ctrl-f s`, `:Telescope luasnip`) 
 
 Telescope is mapped to `ctrl-f`. Typing `ctrl-f` by itself shows the telescope selector after a timeout. The `ctrl-f` shortcut can also be combined with other keys to directly jump to some of the most common modules, e.g.
 
-* `ctrl-f f` - Find Files
+* `ctrl-f f` - Find sibling files (search in the folder containing the currently open file)
+* `ctrl-f .` - Find files in the current working directory
+* `ctrl-f p` - Find files in the git project directory
+* `ctrl-f c` - Find configuration files (inside `~/.config/nvim/`)
 * `ctrl-f h` – Find vim help tags
 * `ctrl-f k` - Find Keymap
 * `ctrl-f d` - Find LSP diagnostics
@@ -87,7 +90,7 @@ Telescope is mapped to `ctrl-f`. Typing `ctrl-f` by itself shows the telescope s
 
 etc. (use `ctrl-f k` to find all keymaps)
 
-Telescope replaces the [`ctrlp.vim`](https://github.com/kien/ctrlp.vim) plugin I was using with vim. `ctrl-p` directly searches for files. Any file can be opened in a vertical or horizontal split with `ctrl-v`/`ctrl-o v` and `ctrl-x`/`ctrl-o h`, respectively.
+Telescope replaces the [`ctrlp.vim`](https://github.com/kien/ctrlp.vim) plugin I was using with vim. `ctrl-p` directly searches for files, combining local files (`ctrl-f .`), sibling files (`ctrl-f f`) and project files (`ctrl-f p`) . Any file can be opened in a vertical or horizontal split with `ctrl-v`/`ctrl-o v` and `ctrl-x`/`ctrl-o h`, respectively.
 
 
 ### LSP
