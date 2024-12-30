@@ -259,6 +259,16 @@ vim.cmd([[cabbr AB 'a,'b]])
 -- Do not use Nerd Font
 vim.g.have_nerd_font = false  -- some plugins may use this
 
+
+-- Set up a better definition of a "block" text object: blocks are lines
+-- separated by two or more blank lines, instead of the default "text delimited
+-- by parentheses".
+--
+vim.api.nvim_set_keymap('o', 'ib', [[:lua require('blockobjects').select_block(false)<CR>]], {noremap = true, silent = true})
+vim.api.nvim_set_keymap('x', 'ib', [[:lua require('blockobjects').select_block(false)<CR>]], {noremap = true, silent = true})
+vim.api.nvim_set_keymap('o', 'ab', [[:lua require('blockobjects').select_block(true)<CR>]], {noremap = true, silent = true})
+vim.api.nvim_set_keymap('x', 'ab', [[:lua require('blockobjects').select_block(true)<CR>]], {noremap = true, silent = true})
+
 -- TODO
 -- * For some programming languages, delete trailing spaces on save
 -- * set wildmode=longest,full

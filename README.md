@@ -20,6 +20,13 @@ Update at any time by running `git pull` inside the `~/.config/nvim` folder.
 * My leader key is `,`.
 
 
+### Block object
+
+Vim has a "block" object (`ib`, `ab`) which by default is (uselessly) defined as parenthesis, synonymously with `i(` and `a(`. I override this based on the definition of a "block" in `lua/blockobjects.lua`. For code files, "blocks" are separated by two blank lines or by a blank line and a non-indented comment. This is appropriate to select functions/classes including their preceding documentation. It also corresponds to what most literate-programming environments use (including [Jupytext](https://jupytext.readthedocs.io/en/latest/) and [Literate.jl](https://fredrikekre.github.io/Literate.jl/v2/)), and thus naturally works well with [Slime](#slime).
+
+In markdown files, a "block" defaults to a fenced code block. Again, this is designed for sending code blocks via Slime.
+
+
 ### Plugin management
 
 Plugins are managed via [Lazy](https://github.com/folke/lazy.nvim). I keep the
@@ -132,7 +139,7 @@ Omni-completion (`<ctrl-x><ctr-o>`) is available to complete, e.g., citation key
 
 Insert-mode keymaps are disabled, we use LuaSnip instead.
 
-Jumping to the PDF is done with the `,s` shortcut. This is a buffer-local mapping. Usually, `,s` is use for slime-send. In Skim (my PDF viewer on macOS), to go back from the PDF to the source code, under the assumption that nvim is running inside tmux, use `ctrl-shift` with a double-click. This is a Skim feature, though, and relies on a custom setup to interact with tmux.
+Jumping to the PDF is done with the `,s` shortcut. This is a buffer-local mapping. Usually, `,s` is use for [slime-send](#slime). In Skim (my PDF viewer on macOS), to go back from the PDF to the source code, under the assumption that nvim is running inside tmux, use `ctrl-shift` with a double-click. This is a Skim feature, though, and relies on a custom setup to interact with tmux.
 
 The `vimtex` plugin provides the following text objects in addition to the default (`:help text-objects`) ones:
 
@@ -162,3 +169,9 @@ Julia support is provided by the [`julia-vim` plugin](https://github.com/JuliaEd
 We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc. The LSP for Julia is set up manually (not via Mason). It relies on the script in `./helpers/julia_languageserver.jl`, which in turn depends on a Julia environment in `~/.julia/environments/nvim-lspconfig` that has the [`LanguageServer`](https://github.com/julia-vscode/LanguageServer.jl) package installed.
 
 For `.jl` files that are [`Literate.jl`](https://fredrikekre.github.io/Literate.jl/v2/) scripts, alternative settings can be activated with the `:LiterateOn` commands (which invokes the `init` function in `./lua/literate.lua`). To return to the normal settings, use `:LiterateOff`.
+
+### Slime
+
+I use the [vim-slime](https://github.com/jpalardy/vim-slime) plugin to send code to a REPL running in another tmux pane. The tdefault shortcut `<ctrl-c><ctrl-c>` has been modified to send "blocks" (see the custom [block object](#block-object)), instead of a "paragraph" or the current visual selection). In addition, the `,s` shortcuts sends either the current line or the current visual selection.
+
+Always manually run `:SlimeConfig` before sending text.
