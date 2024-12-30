@@ -269,11 +269,16 @@ vim.api.nvim_set_keymap('x', 'ib', [[:lua require('blockobjects').select_block(f
 vim.api.nvim_set_keymap('o', 'ab', [[:lua require('blockobjects').select_block(true)<CR>]], {noremap = true, silent = true})
 vim.api.nvim_set_keymap('x', 'ab', [[:lua require('blockobjects').select_block(true)<CR>]], {noremap = true, silent = true})
 
+
+-- Align to mark
+vim.api.nvim_set_keymap('n', '<leader>a', '', {noremap = true, silent = true, callback = function()
+  require('align_to_mark').align_to_mark('a')
+end})
+
 -- TODO
 -- * For some programming languages, delete trailing spaces on save
 -- * set wildmode=longest,full
 -- * go to defn of tag under the cursor (case sensitive)
--- * Align to mark 'a
 -- * termguicolors?
 -- * "Human" text with better statusline
 

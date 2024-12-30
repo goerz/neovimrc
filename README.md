@@ -112,9 +112,15 @@ Outlines are generally provided by the [`outline.nvim` plugin](https://github.co
 
 To comment out a line or block, use `,c ` in normal or visual mode.
 
-## Indentation Guides
+### Indentation Guides
 
 The [Indent Blankline](https://github.com/lukas-reineke/indent-blankline.nvim) plugin provides useful indentation guides. These are off by default but can be toggled on with `,i`.
+
+
+### Alignment
+
+The `,a` shortcut is set up to align the character under the cursor with the column of the `'a` mark. This is implemented via `./lua/align_to_mark.lua`.
+
 
 ### Git (fugitive)
 
