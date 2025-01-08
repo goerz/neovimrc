@@ -2,6 +2,10 @@ return {
   {
     'stevearc/oil.nvim',
     commit = "64a3a555b40d96faae488ed6cf5d0f8b38520891",
+    keys = {
+      { "go", ":Oil<CR>", desc = "Open directory in Oil" },
+    },
+    lazy = false,
     opts = {
       columns = {},
       view_options = {

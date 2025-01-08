@@ -4,10 +4,8 @@ return {
     lazy = true,
     cmd = { "Outline", "OutlineOpen" },
     keys = { -- Example mapping to toggle outline
-      { "go", "<cmd>OutlineOpen<CR>", desc = "Open outline" },
-      -- This overrides vim's built-in go (jump to byte), which I never use.
-      -- Inside an Outline, "go" jumps back to the code (set up in `config` at
-      -- the end of this file)
+      { "gO", "<cmd>OutlineOpen<CR>", desc = "Open outline" },
+      -- Note that `gO` is a built-in shortcut for outlines (in help files)
     },
     opts = {
       -- Your setup opts here
@@ -226,7 +224,7 @@ return {
         -- This function takes a kind (string) as parameter and should return an
         -- icon as string.
         icon_fetcher = function(k)
-          local ft = vim.api.nvim_buf_get_option(require('outline').current.code.buf, "ft")
+          local ft = vim.api.nvim_get_option_value('filetype', { buf = require('outline').current.code.buf })
           if ft == 'markdown' and k == 'String' then
             -- markdown only has Strings (for headings)
             return ""
@@ -279,12 +277,13 @@ return {
     config = function(_, opts)
       require("outline").setup(opts)
       vim.api.nvim_create_augroup("OutlineFileTypeGroup", { clear = true })
-      -- If we're inside an Outline, we want "go" to jump back to the code
+      -- If we're inside an Outline, we want "go"/"gO" to jump back to the code
       vim.api.nvim_create_autocmd("Filetype", {
         pattern = "Outline",
         callback = function()
           local kopts = { noremap = true, silent = true }
           vim.api.nvim_buf_set_keymap(0, 'n', 'go', '<cmd>OutlineFocusCode<CR>', kopts)
+          vim.api.nvim_buf_set_keymap(0, 'n', 'gO', '<cmd>OutlineFocusCode<CR>', kopts)
         end,
         group = "OutlineFileTypeGroup",
       })

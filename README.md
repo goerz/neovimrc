@@ -37,6 +37,13 @@ Run `:Lazy` to open the plugin manager.
 Run `:Lazy reload <plugin name>`.
 
 
+### Directories with Oil.nvim
+
+The [oil.nvim](https://github.com/stevearc/oil.nvim) plugin replaces the built-in Netrw plugin.
+
+The directory containing the current file can be opened with `go` (equivalent to `:Oil`)
+
+
 ### Treesitter
 
 Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](https://github.com/nvim-treesitter/nvim-treesitter) sets up which parsers are installed, and which Treesitter features are used for particular filetypes. The plugin also provides the queries that connect between the syntax tree and highlight groups. These queries may be customized in the `./queries` (replacing existing queries) and `./after/queries/` (extending existing queries) folders.
@@ -99,14 +106,26 @@ Everything related to LSP is set up in `./lua/plugins/lspconfig.lua`. This inclu
 
 Use `:lua =vim.lsp.buf_get_clients()[1]` to show the first LSP client attached to the current buffer (`=` is a shortcut for `vim.print`).
 
-You can inspect various information about the LSP client/server, eg., the name or server capabilities (`:lua =vim.lsp.get_active_clients()[1].server_capabilities`).
+You can inspect various information about the LSP client/server, e.g., the name or server capabilities (`:lua =vim.lsp.get_active_clients()[1].server_capabilities`).
 
 LSP Diagnostics for the local file are set up to appear in the quickfix windows (`:copen`), i.e., the window that traditionally shows the results of  `:make`. The project-wide diagnostics are better viewed through Telescope (`ctrf-f d`).
+
+The following keymaps are defined in a buffer with an attached LSP:
+
+* `gd` - go to definition
+* `gr` - go to references
+* `,D` - Show type definition in telescope
+* `,ds` - Search through document symbols in telescope
+* `,ws` - Search through workspace symbols in telescope
+* `,rn` - Rename
+* `,ca` - Code action
+* `K` - Hover documentation
+* `gD` - go to declaration (e.g., go to header in C)
 
 
 ### Outlines
 
-Outlines are generally provided by the [`outline.nvim` plugin](https://github.com/hedyhli/outline.nvim). The shortcut to open the outline is `go`.
+Outlines are generally provided by the [`outline.nvim` plugin](https://github.com/hedyhli/outline.nvim). The shortcut to open the outline is `gO`.
 
 ### Commenting
 
