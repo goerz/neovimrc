@@ -356,6 +356,9 @@ if vim.g.neovide then
   vim.api.nvim_set_keymap('n', '<D-q>', ':qa<CR>', { noremap = true, silent = true })
   vim.api.nvim_set_keymap('i', '<D-q>', '<ESC><ESC>:qa<CR>', { noremap = true, silent = true })
   vim.api.nvim_set_keymap("n", "<D-n>", ":silent exec '!/Applications/Neovide.app/Contents/MacOS/neovide'<cr>", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-+>', ':lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.25<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-->', ':lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.25<CR>', { noremap = true, silent = true })
+  vim.api.nvim_set_keymap('n', '<D-0>', ':lua vim.g.neovide_scale_factor = 1<CR>', { noremap = true, silent = true })
 end
 
 -- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen
