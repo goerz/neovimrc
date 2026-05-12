@@ -120,4 +120,10 @@ return {
     )
   ),
 
+  ls.snippet({trig="Eq.", dscr="Equation reference"},
+    fmta("Eq.~\\eqref{<>}",
+      { i(1) }
+    )
+  ),
+
 }

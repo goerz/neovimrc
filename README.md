@@ -177,7 +177,21 @@ The `vimtex` plugin provides the following text objects in addition to the defau
 * `im`/`am`: in/around item
 * `i$`/`a$`: in/around math (all of `$`, `$$`, `\(\)`
 
-We not not use either Treesitter or LSP for LaTeX
+LuaSnip provides the following snippets for LaTeX (in `luasnippets/tex.lua`):
+
+* `$` - Inline math
+* `(` - Parentheses with `\left` and `\right`
+* `fr` - Fraction
+* `ket` - Ket notation
+* `it` - Itemize environment
+* `eq` - Equation environment with label
+* `env` - Custom environment
+* `fig` - Figure environment
+* `table` - Table environment
+* `c` - Command with argument
+* `Eq.` - Equation reference (`\eqref`)
+
+We do not use either Treesitter or LSP for LaTeX
 
 
 ### Python
