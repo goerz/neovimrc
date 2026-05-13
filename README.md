@@ -136,6 +136,11 @@ To comment out a line or block, use `,c ` in normal or visual mode.
 The [Indent Blankline](https://github.com/lukas-reineke/indent-blankline.nvim) plugin provides useful indentation guides. These are off by default but can be toggled on with `,i`.
 
 
+### Zen Mode
+
+[Zen Mode](https://github.com/folke/zen-mode.nvim) provides a distraction-free writing environment with a centered column (100 characters wide) and a darkened backdrop. Activate it with `:ZenMode` and toggle it off the same way.
+
+
 ### Alignment
 
 The `,a` shortcut is set up to align the character under the cursor with the column of the `'a` mark. This is implemented via `./lua/align_to_mark.lua`.
