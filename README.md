@@ -36,6 +36,37 @@ Run `:Lazy` to open the plugin manager.
 
 Run `:Lazy reload <plugin name>`.
 
+To *add* a plugin, create a new spec file in `./lua/plugins/`; Lazy picks it up
+automatically on the next restart.
+
+To *remove* a plugin, delete its spec file from `./lua/plugins/` (and any
+keymaps or references to it elsewhere in the config). On the next restart Lazy
+detects that the plugin is no longer in the spec and marks it for cleaning; run
+`:Lazy clean` to delete its checkout under `~/.local/share/nvim/lazy/` and drop
+its entry from `lazy-lock.json`. Then commit the deleted spec file together with
+the updated `lazy-lock.json`.
+
+Plugin versions are pinned in `lazy-lock.json`, which is committed to this
+repository. This prevents accidental updates and makes it possible to restore a
+known-good set of plugin versions on any machine.
+
+The plugin checkouts themselves live under `~/.local/share/nvim/lazy/` and are
+*not* tracked here; they are derived state that can always be regenerated from
+`lazy-lock.json`. The workflow is:
+
+- `:Lazy restore` reads `lazy-lock.json` and checks out exactly the pinned
+  commit for every plugin. The lockfile is the source of truth; the checkouts
+  are brought into line with it.
+- `:Lazy update` moves the checkouts to the latest commits *and* rewrites
+  `lazy-lock.json` to match. After an intentional update you are happy with,
+  commit the changed `lazy-lock.json`.
+
+Because the checkouts are derived, reverting `lazy-lock.json` is always safe. If
+you accidentally update a plugin, `git checkout lazy-lock.json` (or edit a single
+plugin's entry back) and then `:Lazy restore` re-checks-out the pinned commit.
+The momentary mismatch between the reverted file and the still-updated checkout
+is resolved by `restore`, which makes the checkout follow the file.
+
 
 ### Directories with Oil.nvim
 
