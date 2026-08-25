@@ -26,7 +26,7 @@ Run `scripts/check-config.sh` after changing the config. It loads the config hea
 ## Conventions
 
 - The leader key is `,`; localleader is `\`.
-- Lua files use 2-space indentation and end with the modeline `-- vim: ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen`.
+- Lua files use 2-space indentation and end with a `--`-comment Vim modeline setting `ts=2 sts=2 sw=2 et fdm=marker fmr={,} nofen`.
 - LaTeX deliberately uses neither Treesitter nor LSP; it relies on vimtex and LuaSnip snippets (`luasnippets/tex.lua`).
 - The README documents user-facing keymaps and workflows in detail; when adding or changing keymaps, update the corresponding README section.
 - Plugin may be loaded from local dev checkouts
