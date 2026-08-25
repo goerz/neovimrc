@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A personal Neovim configuration (Lua-only, no Vimscript config), managed as a git repo cloned to `~/.config/nvim`. There is no build, test, or lint step; changes are verified by (re)starting Neovim. Plugin versions are pinned in `lazy-lock.json`.
+A personal Neovim configuration (Lua-only, no Vimscript config), managed as a git repo cloned to `~/.config/nvim`. Plugin versions are pinned in `lazy-lock.json`.
+
+## Verifying changes
+
+Run `scripts/check-config.sh` after changing the config. It loads the config headlessly, force-loads every lazy.nvim plugin (so `config`/`opts` bodies actually execute), and exits nonzero if anything produces a warning or error. Pass a binary to smoke-test a different Neovim version: `scripts/check-config.sh /path/to/other/nvim` (or `NVIM=/path/to/other/nvim scripts/check-config.sh`). A clean load prints `PASS`; this is the quickest way to confirm a change loads without errors. It cannot exercise interactive behavior or keymaps, so still restart Neovim for those.
 
 ## Architecture
 
