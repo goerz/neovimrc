@@ -1,10 +1,9 @@
 return {
   { -- Colorizer
-    'norcalli/nvim-colorizer.lua',
-    commit = 'a065833f35a3a7cc3ef137ac88b5381da2ba302e',
+    'catgoose/nvim-colorizer.lua',
     opts = {
-      lua = {names = false},
-      vim = {names = false}
+      filetypes = { 'lua', 'vim' },
+      user_default_options = { names = false },
     },
   }
 }

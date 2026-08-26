@@ -123,7 +123,8 @@ return {
 
       -- Prevent LSP from overwriting treesitter color settings
       -- https://github.com/NvChad/NvChad/issues/1907
-      vim.highlight.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
+      local hl = vim.hl or vim.highlight -- vim.highlight was renamed to vim.hl in Neovim 0.11
+      hl.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
 
       -- LSPs and other tools can (but don't have to) be installed via Mason/Mason-Tool-Installer
       --

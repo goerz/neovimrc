@@ -59,7 +59,7 @@ function M.echo_diagnostic()
 		last_echo = { true, bufnr, line }
 
 		local diag = diags[1]
-		local width = vim.api.nvim_get_option('columns') - 15
+		local width = vim.o.columns - 15
 		local lines = vim.split(diag.message, '\n')
 		local message = lines[1]
 
@@ -98,7 +98,7 @@ local format_async = function(err, result, ctx)
 	end
 
 	local bufnr = ctx.bufnr
-	if not vim.api.nvim_buf_get_option(bufnr, 'modified') then
+	if not vim.bo[bufnr].modified then
 		local view = vim.fn.winsaveview()
 		vim.lsp.util.apply_text_edits(result, bufnr)
 		vim.fn.winrestview(view)
