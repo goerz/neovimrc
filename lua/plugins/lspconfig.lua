@@ -9,8 +9,13 @@ return {
     },
     config = function()
 
-      require('vim.lsp.log').set_format_func(vim.inspect)
-      -- This doesn't seem to work, but it would be nice to have a better log
+      -- Remove Neovim's default `gr`-prefixed LSP mappings (`:help grr` etc.,
+      -- added in 0.11/0.12). Their functionality is covered by the LspAttach
+      -- keymaps below, and their existence makes our `gr` mapping wait for
+      -- 'timeoutlen' to rule out a longer match.
+      for _, lhs in ipairs({ 'grr', 'grn', 'gra', 'gri', 'grt' }) do
+        pcall(vim.keymap.del, { 'n', 'x' }, lhs)
+      end
 
       vim.api.nvim_create_autocmd('LspAttach', {
 
@@ -53,9 +58,7 @@ return {
           -- or a suggestion from your LSP for this to activate.
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-          -- Opens a popup that displays documentation about the word under your cursor
-          --  See `:help K` for why this keymap.
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          -- Note: `K` shows hover documentation by default (`:help K-lsp-default`)
 
           -- This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
@@ -105,26 +108,13 @@ return {
         callback = set_diagnostics_in_quickfix,
       })
 
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP specification.
-      --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-      --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
-      vim.diagnostic.config(
-        {
-          virtual_text = false, -- Too distracting. Instead, we'll echo diagnostics in the command line bar (see below)
-          signs = true,
-          update_in_insert = false,
-          underline = true,
-        }
-      )
+      -- Note: diagnostic `virtual_text` (too distracting) is disabled by
+      -- default since Neovim 0.11; we echo diagnostics in the command line
+      -- bar instead (see above).
 
       -- Prevent LSP from overwriting treesitter color settings
       -- https://github.com/NvChad/NvChad/issues/1907
-      local hl = vim.hl or vim.highlight -- vim.highlight was renamed to vim.hl in Neovim 0.11
-      hl.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
+      vim.hl.priorities.semantic_tokens = 95 -- Or any number lower than 100, treesitter's priority level
 
       -- LSPs and other tools can (but don't have to) be installed via Mason/Mason-Tool-Installer
       --
@@ -145,10 +135,16 @@ return {
         }
       }
 
-      require('lspconfig').lua_ls.setup({
-        -- cmd = {...},
-        -- filetypes = { ...},
-        capabilities = capabilities,
+      -- Server configurations. The defaults (cmd, filetypes, root markers)
+      -- come from the `lsp/<name>.lua` files in nvim-lspconfig; the tables
+      -- below are merged with those defaults. See `:help lsp-config`.
+
+      -- Advertise the extra capabilities provided by nvim-cmp to all servers.
+      vim.lsp.config('*', {
+        capabilities = require('cmp_nvim_lsp').default_capabilities(),
+      })
+
+      vim.lsp.config('lua_ls', {
         settings = {
           Lua = {
             completion = {
@@ -168,18 +164,15 @@ return {
       })
 
       local julia_ls_script = vim.fs.joinpath(vim.fn.stdpath('config'), "helpers", "julia_languageserver.jl")
-      require'lspconfig'.julials.setup({
+      vim.lsp.config('julials', {
         cmd = {"julia", "--startup-file=no", "--history-file=no", julia_ls_script},
-        single_file_support = true,
         on_attach = function(_, bufnr)
           -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
           vim.bo[bufnr].formatexpr = ''
         end,
-        capabilities = capabilities,
       })
 
-      require('lspconfig').basedpyright.setup({
-        filetypes = { "python" },
+      vim.lsp.config('basedpyright', {
         settings = {
           basedpyright = {
             analysis = {
@@ -193,9 +186,7 @@ return {
         end
       })
 
-      require('lspconfig').ruff.setup({
-        filetypes = { "python" }
-      })
+      vim.lsp.enable({ 'lua_ls', 'julials', 'basedpyright', 'ruff' })
 
     end,  -- end of config function
 

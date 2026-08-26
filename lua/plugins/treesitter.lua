@@ -1,10 +1,14 @@
 return {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    version = '0.9.3',
+    -- The `master` branch is locked, but is upstream's supported path for
+    -- Neovim 0.11. The rewritten `main` branch (the repo default, requiring
+    -- Neovim 0.12+) is an incompatible new API; migrate once 0.11 support is
+    -- no longer needed.
+    branch = 'master',
     build = ':TSUpdate',
     dependencies = {
-      {"nvim-treesitter/nvim-treesitter-textobjects", commit="b91c98afa6c42819aea6cbc1ba38272f5456a5cf"},
+      { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'master' },
     },
     opts = {
       ensure_installed = {

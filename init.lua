@@ -112,7 +112,7 @@ vim.api.nvim_set_keymap('n', '<C-w><Right>', '', { noremap = true, silent = true
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'  -- subfolder of ~/.local/share
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
 end ---@diagnostic disable-next-line: undefined-field
@@ -167,11 +167,6 @@ vim.opt.textwidth = 0
 vim.api.nvim_set_keymap('n', "'", '`', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '`', "'", { noremap = true, silent = true })
 
--- Pastetoggle (option removed in Neovim 0.11)
-if pcall(function() vim.opt.pastetoggle = '<C-L>p' end) then
-  vim.api.nvim_set_keymap('n', '<Leader>p', ':set invpaste<CR>', { noremap = true, silent = true })
-end
-
 -- Save
 vim.api.nvim_set_keymap('n', '<Leader>w', ':w!<CR>', { noremap = true, silent = true, desc="Save (:w!)"})
 
@@ -207,8 +202,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
-    local hl = vim.hl or vim.highlight -- vim.highlight was renamed to vim.hl in Neovim 0.11
-    hl.on_yank()
+    vim.hl.on_yank()
   end,
 })
 

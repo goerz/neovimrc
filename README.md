@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-This configuration is intended to work with [Neovim][] only. It is a fresh restart from an [earlier configuration](https://github.com/goerz/vimrc) that works for both [Vim][] and [Neovim][]. Here, we go all-in on using Lua for the configuration and generally following the most modern best practices.
+This configuration is intended to work with [Neovim][] only, version 0.11 or later. It is a fresh restart from an [earlier configuration](https://github.com/goerz/vimrc) that works for both [Vim][] and [Neovim][]. Here, we go all-in on using Lua for the configuration and generally following the most modern best practices.
 
 Clone this repository to [`$XDG_CONFIG_HOME/nvim`](https://neovim.io/doc/user/nvim.html#nvim-from-vim), generally `~/.config/nvim`:
 
@@ -135,9 +135,9 @@ Telescope replaces the [`ctrlp.vim`](https://github.com/kien/ctrlp.vim) plugin I
 
 Everything related to LSP is set up in `./lua/plugins/lspconfig.lua`. This includes auxiliary plugins like [Mason](https://github.com/williamboman/mason.nvim) and shortcut/UI customization.
 
-Use `:lua =vim.lsp.buf_get_clients()[1]` to show the first LSP client attached to the current buffer (`=` is a shortcut for `vim.print`).
+Use `:lua =vim.lsp.get_clients({ bufnr = 0 })[1]` to show the first LSP client attached to the current buffer (`=` is a shortcut for `vim.print`).
 
-You can inspect various information about the LSP client/server, e.g., the name or server capabilities (`:lua =vim.lsp.get_active_clients()[1].server_capabilities`).
+You can inspect various information about the LSP client/server, e.g., the name or server capabilities (`:lua =vim.lsp.get_clients()[1].server_capabilities`).
 
 LSP Diagnostics for the local file are set up to appear in the quickfix windows (`:copen`), i.e., the window that traditionally shows the results of  `:make`. The project-wide diagnostics are better viewed through Telescope (`ctrf-f d`).
 
@@ -150,7 +150,7 @@ The following keymaps are defined in a buffer with an attached LSP:
 * `,ws` - Search through workspace symbols in telescope
 * `,rn` - Rename
 * `,ca` - Code action
-* `K` - Hover documentation
+* `K` - Hover documentation (Neovim built-in)
 * `gD` - go to declaration (e.g., go to header in C)
 
 
