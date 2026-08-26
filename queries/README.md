@@ -1,6 +1,6 @@
 # Tree-Sitter Queries
 
-This folder contains tree-sitter queries that take precedence over queries provided by the `nvim-treesitter` plugin.
+This folder contains tree-sitter queries that take precedence over queries provided by the `nvim-treesitter` plugin (installed to `~/.local/share/nvim/site/queries/`) or bundled with Neovim.
 
 >  Nvim looks for queries as `*.scm` files in a `queries` directory under
 > `runtimepath`, where each file contains queries for a specific language and

@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-This configuration is intended to work with [Neovim][] only, version 0.11 or later. It is a fresh restart from an [earlier configuration](https://github.com/goerz/vimrc) that works for both [Vim][] and [Neovim][]. Here, we go all-in on using Lua for the configuration and generally following the most modern best practices.
+This configuration is intended to work with [Neovim][] only, version 0.12 or later. It is a fresh restart from an [earlier configuration](https://github.com/goerz/vimrc) that works for both [Vim][] and [Neovim][]. Here, we go all-in on using Lua for the configuration and generally following the most modern best practices.
 
 Clone this repository to [`$XDG_CONFIG_HOME/nvim`](https://neovim.io/doc/user/nvim.html#nvim-from-vim), generally `~/.config/nvim`:
 
@@ -77,7 +77,7 @@ The directory containing the current file can be opened with `go` (equivalent to
 
 ### Treesitter
 
-Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](https://github.com/nvim-treesitter/nvim-treesitter) sets up which parsers are installed, and which Treesitter features are used for particular filetypes. The plugin also provides the queries that connect between the syntax tree and highlight groups. These queries may be customized in the `./queries` (replacing existing queries) and `./after/queries/` (extending existing queries) folders.
+Treesitter is a built-in part of Neovim, but the [`nvim-treesitter` plugin](https://github.com/nvim-treesitter/nvim-treesitter) installs parsers and the queries that connect between the syntax tree and highlight groups (into `~/.local/share/nvim/site/`). Which parsers are installed, and which Treesitter features (highlighting, indentation) are enabled for particular filetypes is configured in `./lua/plugins/treesitter.lua`. Queries may be customized in the `./queries` (replacing existing queries) and `./after/queries/` (extending existing queries) folders.
 
 When Treesitter is active, use `:InspectTree` to see the parser tree, and to develop or debug queries.
 
@@ -88,8 +88,6 @@ Treesitter provides the following text objects:
 * `i=`/`a=`: in/around assignment (where "in" means the right-hand-side)
 * `al`: around loop
 * `aS`: around scope
-
-The `gnn` keymap starts incremental selection, repeating it increments the selection, `gnm` decrements it.
 
 
 ### Autocompletion

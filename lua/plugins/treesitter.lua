@@ -1,75 +1,72 @@
 return {
-  { -- Highlight, edit, and navigate code
+  { -- Treesitter parser/query management ("main" rewrite, requires Neovim 0.12+)
     'nvim-treesitter/nvim-treesitter',
-    -- The `master` branch is locked, but is upstream's supported path for
-    -- Neovim 0.11. The rewritten `main` branch (the repo default, requiring
-    -- Neovim 0.12+) is an incompatible new API; migrate once 0.11 support is
-    -- no longer needed.
-    branch = 'master',
+    branch = 'main',
+    lazy = false, -- the plugin does not support lazy-loading
     build = ':TSUpdate',
-    dependencies = {
-      { 'nvim-treesitter/nvim-treesitter-textobjects', branch = 'master' },
-    },
-    opts = {
-      ensure_installed = {
-        'bash', 'diff', 'html', 'julia', 'luadoc', 'vim', 'comment', 'python'
-      },
-      -- Neovim comes with some built-in parsers, see `:help treesitter`. This
-      -- includes a Markdown parser in particular. That parser (as well as the
-      -- equivalent parser that we could install through nvim-treesitter) is
-      -- lacking some important Markdown extensions, sich as LaTeX math.
-      -- It is best to compile the Markdown parser manually and to put the
-      -- resulting `.so` files in `~/.config/nvim/parser/`, see the `README` in
-      -- that folder.
-      auto_install = false,
-      highlight = {
-        enable = true,
-      },
-      indent = {
-        enable = true,
-        disable = {
-          "julia",  -- messes up, better to use patched julia-vim/indent/julia.vim
-        }
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "gnn",
-          node_incremental = "gnn",
-          scope_incremental = false,
-          node_decremental = "gnm",
-        },
-      },
-      textobjects = {
-        enable = true,
+    config = function()
+      -- Parsers (and their queries) are installed to `stdpath('data')/site`.
+      -- Neovim itself bundles parsers for c, lua, vim, vimdoc, query, and
+      -- markdown. The bundled Markdown parser (as well as the equivalent
+      -- parser that we could install through nvim-treesitter) is lacking some
+      -- important Markdown extensions, such as LaTeX math. It is best to
+      -- compile the Markdown parser manually and to put the resulting `.so`
+      -- files in `~/.config/nvim/parser/`, see the `README` in that folder.
+      -- Hence, `markdown` must not be in the list of parsers below.
+      require('nvim-treesitter').install {
+        'bash', 'comment', 'diff', 'html', 'julia', 'luadoc', 'python',
+      }
+      vim.api.nvim_create_autocmd('FileType', {
+        group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
+        callback = function(ev)
+          -- Highlighting, for any filetype with an available parser
+          if not pcall(vim.treesitter.start, ev.buf) then
+            return
+          end
+          -- Treesitter-based indentation (experimental), except for Julia,
+          -- where it messes up; better to use patched julia-vim/indent/julia.vim
+          if vim.bo[ev.buf].filetype ~= 'julia' then
+            vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
+    end,
+  },
+  { -- Syntax-aware text objects (functions, classes, loops, assignments)
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    branch = 'main',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    config = function()
+      require('nvim-treesitter-textobjects').setup {
         select = {
-          enable = true,
           -- Automatically jump forward to textobj, similar to targets.vim
           lookahead = true,
-          keymaps = {
-            -- You can use the capture groups defined in textobjects.scm
-            ["af"] = { query = "@function.outer", desc = "Select function" },
-            ["if"] = { query = "@function.inner", desc = "Select inner function" },
-            ["ac"] = { query = "@class.outer", desc = "Select class" },
-            ["ic"] = { query = "@class.inner", desc = "Select inner class" },
-            ["al"] = { query = "@loop.outer", desc = "Select loop" },
-            ["a="] = { query = "@assignment.outer", desc = "Select assignment" },
-            ["i="] = { query = "@assignment.inner", desc = "Select inner assignment (RHS)" },
-            -- TODO: frame in latex -- extend to blocks sendable with slime
-            -- TODO: [a.] for statement
-            -- TODO: ["is", "as"] for generalized strings
-            -- TODO: ["i$", "a$"] for math in markdown
-            -- TODO: ["il", "al"] for links in markdown
-            ["aS"] = { query = "@local.scope", query_group = "locals", desc = "Select language scope" },
-
-          },
         },
-      },
-      -- TODO: set up move shortcuts (`]]`, `]m` etc. overriding `:help object-motions`, `:help various-motions`)
-    },
-    config = function(_, opts)
-      require('nvim-treesitter.install').prefer_git = true
-      require('nvim-treesitter.configs').setup(opts)
+      }
+      -- You can use the capture groups defined in textobjects.scm
+      local function sel(query, group)
+        return function()
+          require('nvim-treesitter-textobjects.select').select_textobject(query, group or 'textobjects')
+        end
+      end
+      local map = function(keys, func, desc)
+        vim.keymap.set({ 'x', 'o' }, keys, func, { desc = desc })
+      end
+      map('af', sel('@function.outer'), 'Select function')
+      map('if', sel('@function.inner'), 'Select inner function')
+      map('ac', sel('@class.outer'), 'Select class')
+      map('ic', sel('@class.inner'), 'Select inner class')
+      map('al', sel('@loop.outer'), 'Select loop')
+      map('a=', sel('@assignment.outer'), 'Select assignment')
+      map('i=', sel('@assignment.inner'), 'Select inner assignment (RHS)')
+      -- TODO: frame in latex -- extend to blocks sendable with slime
+      -- TODO: [a.] for statement
+      -- TODO: ["is", "as"] for generalized strings
+      -- TODO: ["i$", "a$"] for math in markdown
+      -- TODO: ["il", "al"] for links in markdown
+      map('aS', sel('@local.scope', 'locals'), 'Select language scope')
+      -- TODO: set up move shortcuts (`]]`, `]m` etc. overriding
+      -- `:help object-motions`, `:help various-motions`)
     end,
   },
 }
