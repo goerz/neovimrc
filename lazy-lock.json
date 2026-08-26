@@ -6,6 +6,7 @@
   "emacs-bindings.nvim": { "branch": "master", "commit": "3a131fc5e79acdadb1bc3b0b1fe73de1fbf9d00a" },
   "fidget.nvim": { "branch": "main", "commit": "d9ba6b7bfe29b3119a610892af67602641da778e" },
   "gitsigns.nvim": { "branch": "main", "commit": "0b04035bb7b3c83e999b9676e2fb46fd0aa9f910" },
+  "goerz-colors.nvim": { "branch": "master", "commit": "e1b9cd7b0ca13340c8bf66e985a3eb469db50427" },
   "indent-blankline.nvim": { "branch": "master", "commit": "d98f537c3492e87b6dc6c2e3f66ac517528f406f" },
   "julia-vim": { "branch": "tweaks", "commit": "63c37af8c962cd8ade76cd7db118671313b100fd" },
   "jupytext.nvim": { "branch": "master", "commit": "2e86acfa4345f611c86f57116db0c06ffecb721d" },
