@@ -124,15 +124,34 @@ return {
       --
       --  You can press `g?` for help in this menu.
       require('mason').setup()
+
+      -- basedpyright installs from PyPI with a bundled Node.js, which needs
+      -- glibc 2.28 or later. On older Linux systems it can never install, and
+      -- Mason would retry (and fail) on every start, so leave it out there.
+      local function glibc_too_old()
+        if vim.uv.os_uname().sysname ~= 'Linux' then
+          return false
+        end
+        local major, minor = vim.fn.system({ 'getconf', 'GNU_LIBC_VERSION' }):match('(%d+)%.(%d+)')
+        if not major then
+          return false  -- not glibc (e.g. musl)
+        end
+        return tonumber(major) < 2 or (tonumber(major) == 2 and tonumber(minor) < 28)
+      end
+      local use_basedpyright = not glibc_too_old()
+
+      local mason_tools = {
+        'lua_ls',  -- automatically installs tools for Lua language server
+        -- Julia language server is installed manually, so we keep it ouf of Mason
+        'stylua',
+        'ruff',
+      }
+      if use_basedpyright then
+        table.insert(mason_tools, 'basedpyright')
+      end
       require('mason-tool-installer').setup {
         -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim?tab=readme-ov-file#configuration
-        ensure_installed = {
-          'lua_ls',  -- automatically installs tools for Lua language server
-          -- Julia language server is installed manually, so we keep it ouf of Mason
-          'stylua',
-          'basedpyright',
-          'ruff',
-        }
+        ensure_installed = mason_tools,
       }
 
       -- Server configurations. The defaults (cmd, filetypes, root markers)
@@ -239,7 +258,10 @@ return {
         end
       })
 
-      vim.lsp.enable({ 'lua_ls', 'jetls', 'basedpyright', 'ruff' })
+      vim.lsp.enable({ 'lua_ls', 'jetls', 'ruff' })
+      if use_basedpyright then
+        vim.lsp.enable('basedpyright')
+      end
 
     end,  -- end of config function
 
