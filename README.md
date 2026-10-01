@@ -233,7 +233,25 @@ Both of these linters are installed through Mason.
 
 Julia support is provided by the [`julia-vim` plugin](https://github.com/JuliaEditorSupport/julia-vim). Most importantly, it enables LaTeX-to-Unicode via tab key. Since this is extremely useful even outside of Julia, this feature of the plugin is active in some other filetypes as well (like markdown), and can be activated with `,l` in other buffers.
 
-We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc. The LSP for Julia is set up manually (not via Mason). It relies on the script in `./helpers/julia_languageserver.jl`, which in turn depends on a Julia environment in `~/.julia/environments/nvim-lspconfig` that has the [`LanguageServer`](https://github.com/julia-vscode/LanguageServer.jl) package installed.
+We also have Treesitter and LSP set up for Julia, providing syntax highlighting, linting, outlines (via `go`), etc. The LSP for Julia is set up manually (not via Mason).
+
+The server is [JETLS](https://github.com/aviatesk/JETLS.jl), installed as a Pkg app so that `jetls` ends up on `$PATH`:
+
+~~~
+julia -e 'using Pkg; Pkg.Apps.add(; url="https://github.com/aviatesk/JETLS.jl", rev="release")'
+~~~
+
+Note that Pkg app shims hardcode the path of the Julia that installed them, so re-run this after `juliaup` removes a version.
+
+Formatting through the language server is deliberately disabled. Projects define their own `make codestyle`, which runs JuliaFormatter from the project's own environment with the project's own `.JuliaFormatter.toml`; a formatter in the editor running a different JuliaFormatter version would fight with it. Format with `make codestyle`, not from within Neovim.
+
+The previous server, [`LanguageServer.jl`](https://github.com/julia-vscode/LanguageServer.jl), is kept as a configured but disabled fallback (`julials`, driven by `./helpers/julia_languageserver.jl`). It does not run on Julia 1.13 at all, because `SymbolServer` fails to precompile there and both it and `StaticLint` were archived in June 2026. The fallback therefore pins Julia 1.12 and a dedicated `@languageserver` environment:
+
+~~~
+julia +1.12 --project=@languageserver -e 'import Pkg; Pkg.add("LanguageServer")'
+~~~
+
+To switch back to it, swap `'jetls'` for `'julials'` in the `vim.lsp.enable` call in `lua/plugins/lspconfig.lua`.
 
 For `.jl` files that are [`Literate.jl`](https://fredrikekre.github.io/Literate.jl/v2/) scripts, alternative settings can be activated with the `:LiterateOn` commands (which invokes the `init` function in `./lua/literate.lua`). To return to the normal settings, use `:LiterateOff`.
 

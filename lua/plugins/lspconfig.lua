@@ -163,9 +163,62 @@ return {
         },
       })
 
+      -- JETLS (aviatesk): compiler-backed Julia language server, installed as a
+      -- Pkg app (`Pkg.Apps.add(; url="https://github.com/aviatesk/JETLS.jl", rev="release")`).
+      -- Replaces LanguageServer.jl, which does not load on Julia 1.13 at all:
+      -- SymbolServer fails to precompile there, and it and StaticLint were both
+      -- archived in June 2026. See `julials` below for the fallback.
+      vim.lsp.config('jetls', {
+        cmd = {"jetls", "serve"},
+        filetypes = {"julia"},
+        root_markers = {"Project.toml", "JuliaProject.toml", ".git"},
+        -- JETLS only asks for `workspace/configuration` if given a section name.
+        init_options = { configuration_section = 'jetls' },
+        settings = {
+          jetls = {
+            -- Formatting is disabled on the client side in on_attach below, so
+            -- this should never be reached. It is pinned anyway because JETLS
+            -- defaults to Runic, and this guarantees that a stray `runic` on
+            -- $PATH can never end up reformatting anything.
+            formatter = 'JuliaFormatter',
+          },
+        },
+        commands = {
+          -- Code lens "N references" opens the quickfix list.
+          ["editor.action.showReferences"] = function(command, ctx)
+            local client = assert(vim.lsp.get_client_by_id(ctx.client_id))
+            local file_uri, position, references = unpack(command.arguments)
+            local items = vim.lsp.util.locations_to_items(references, client.offset_encoding)
+            vim.fn.setqflist({}, ' ', { title = command.title, items = items })
+            vim.lsp.util.show_document({
+              uri = file_uri,
+              range = { start = position, ["end"] = position },
+            }, client.offset_encoding)
+            vim.cmd('botright copen')
+          end,
+        },
+        on_attach = function(client, bufnr)
+          -- Don't format through the language server. JETLS only shells out to
+          -- an external formatter anyway, so run `jlfmt` directly instead.
+          -- Delete these three lines to get vim.lsp.buf.format() back.
+          client.server_capabilities.documentFormattingProvider = nil
+          client.server_capabilities.documentRangeFormattingProvider = nil
+          vim.bo[bufnr].formatexpr = ''
+        end,
+      })
+
+      -- Fallback: LanguageServer.jl, kept for when JETLS misbehaves. It lives in
+      -- its own `@languageserver` shared environment (NOT the default one, where
+      -- it pins JuliaFormatter to 1.x and drags CommonMark and OrderedCollections
+      -- down with it), and is pinned to Julia 1.12 because it cannot run on 1.13.
+      -- The server is a separate process, so a 1.12 host indexes 1.13 projects
+      -- fine; only `Base`/`Core` are indexed from the host, so names added in
+      -- 1.13 (`takestring!`, `@__FUNCTION__`, ...) will lint as undefined.
+      -- To switch back, swap 'jetls' for 'julials' in vim.lsp.enable below.
       local julia_ls_script = vim.fs.joinpath(vim.fn.stdpath('config'), "helpers", "julia_languageserver.jl")
       vim.lsp.config('julials', {
-        cmd = {"julia", "--startup-file=no", "--history-file=no", julia_ls_script},
+        cmd = {"julia", "+1.12", "--startup-file=no", "--history-file=no",
+               "--project=@languageserver", julia_ls_script},
         on_attach = function(_, bufnr)
           -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
           vim.bo[bufnr].formatexpr = ''
@@ -186,7 +239,7 @@ return {
         end
       })
 
-      vim.lsp.enable({ 'lua_ls', 'julials', 'basedpyright', 'ruff' })
+      vim.lsp.enable({ 'lua_ls', 'jetls', 'basedpyright', 'ruff' })
 
     end,  -- end of config function
 
