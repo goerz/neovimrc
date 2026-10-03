@@ -18,3 +18,7 @@ setlocal spell
 setlocal sidescrolloff=1000
 
 " noremap <silent> <leader>t :Voom markdown<CR>:vertical resize 80<CR>
+
+" Neovim 0.11+ maps a buffer-local `gO` in $VIMRUNTIME/ftplugin/markdown.lua
+" (headings in a location list), shadowing the global outline.nvim mapping
+nnoremap <buffer> <silent> gO <cmd>OutlineOpen<CR>
