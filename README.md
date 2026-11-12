@@ -260,3 +260,43 @@ For `.jl` files that are [`Literate.jl`](https://fredrikekre.github.io/Literate.
 I use the [vim-slime](https://github.com/jpalardy/vim-slime) plugin to send code to a REPL running in another tmux pane. The tdefault shortcut `<ctrl-c><ctrl-c>` has been modified to send "blocks" (see the custom [block object](#block-object)), instead of a "paragraph" or the current visual selection). In addition, the `,s` shortcuts sends either the current line or the current visual selection.
 
 Always manually run `:SlimeConfig` before sending text.
+
+### Dictation (OpenWhispr)
+
+The [openwhispr.nvim](https://github.com/goerz/openwhispr.nvim) plugin dictates text into the buffer: a keymap toggles recording from the microphone, the audio is transcribed locally, Claude Haiku 5.5 cleans up the transcript (using the filetype and the surrounding lines as context), and the result is inserted at the cursor. The spec is in `lua/plugins/openwhispr.lua`. It uses the default options except for turning on the [transcript history](#transcript-history); see `:h openwhispr` for what can be configured.
+
+The plugin defines no keymaps of its own. I map its `<Plug>(openwhispr-toggle)`:
+
+* `,v` in normal mode starts recording. The text is inserted after the cursor position where dictation started.
+* `,v` in visual mode (characterwise or linewise) starts recording; the dictated text replaces the selection.
+* `<C-x><C-v>` in insert mode starts recording; the text is inserted at the cursor, and you stay in insert mode. This shadows Neovim's built-in insert-mode Ex-command-line completion.
+
+While recording, stop with the same key again or with `<Esc>`, or cancel with `<C-c>` to discard the recording. The text appears about 1 to 2 seconds after stopping. The `<Esc>` and `<C-c>` mappings exist only during a recording, only in the buffer being dictated into, and in normal and insert mode; afterwards, any buffer-local mappings they shadowed are restored. In insert mode, `<Esc>` only ends the dictation, so a second `<Esc>` leaves insert mode. These keys can be changed or disabled with the `recording.keys` option.
+
+The command `:OpenWhispr [toggle|start|stop|cancel]` does the same (with a range, `:'<,'>OpenWhispr` replaces the selection). While recording, transcribing, and cleaning up, an indicator appears at the cursor. The plugin is lazy-loaded on these keys and the command, so run `:checkhealth openwhispr` only after it has loaded (e.g., after `:Lazy load openwhispr.nvim`); it checks ffmpeg, the OpenWhispr CLI and app, parakeet-mlx, curl, and the Keychain item, and reports the history file and its number of entries. All external programs are looked up on `$PATH`, so `~/.local/bin` must be on the `$PATH` Neovim sees.
+
+It relies on the following system setup, which lives outside this repository:
+
+* The [OpenWhispr](https://openwhispr.com) desktop app in `/Applications/OpenWhispr.app`, used without an OpenWhispr account. It transcribes with the local model "Parakeet Unified EN 0.6B" (INT8, sherpa-onnx, CPU); "Parakeet TDT 0.6B v3" is also downloaded. Outside of Neovim, the app provides system-wide dictation on the Globe/fn key, with its own cleanup configured as "Bring your own key" → Anthropic → Claude Haiku 5.5.
+* The OpenWhispr CLI, installed with `npm install -g @openwhispr/cli` (v0.3.0) into the fnm-managed Node, and linked as `~/.local/bin/openwhispr`. The plugin calls `openwhispr --local transcribe`. The CLI only works while the desktop app is running: it talks to the app over a loopback bridge on `127.0.0.1`, with port and token in `~/.openwhispr/cli-bridge.json`.
+* A fallback transcriber, [parakeet-mlx](https://github.com/senstella/parakeet-mlx), installed with `uv tool install parakeet-mlx`. Its model (`mlx-community/parakeet-tdt-0.6b-v3`, 2.3 GB) is cached in `~/.cache/huggingface`.
+* `ffmpeg` from Homebrew, which records 16 kHz WAV via avfoundation from the macOS default input device (System Settings > Sound > Input; on my desktop that is the Yeti Stereo Microphone, not the Studio Display Microphone). To pin a specific microphone instead, set the `recording.cmd` option with `":<device name>"`; the plugin's README section "Choosing the microphone" shows how to list the device names. The terminal app needs macOS microphone permission, which is requested on the first recording.
+* An Anthropic API key in the macOS Keychain, under the service name `anthropic-api-key`. It belongs to a separate Anthropic Console account (prepaid credits, auto-reload off), not to my main account. It was added with
+
+      security add-generic-password -a "$USER" -s anthropic-api-key -l "Anthropic API key (dictation cleanup)" -w
+
+  The plugin reads the key from the Keychain for each request. Never export `ANTHROPIC_API_KEY` (in a shell profile, in Neovim, or anywhere else) and never put the key in this repository: if that variable is set, Claude Code silently switches from my subscription to API billing.
+
+#### Project notes
+
+Before each dictation, the plugin collects instructions for the cleanup model, from general to specific: the `cleanup.instructions` option, then every `.dictation.md` file from `~` down to the buffer's directory (outermost first), then `b:openwhispr_instructions`. A `.dictation.md` in a project is the place for its technical terms, names, and notation. For a buffer without a file, or with a file in a temporary directory (such as Claude Code's `Ctrl-G` prompt file in `/private/tmp/`), the search starts from Neovim's working directory instead.
+
+These files are read like `exrc` files, so Neovim asks before trusting each new or changed one ("exrc: Found untrusted code"). Choose (v)iew and then run `:trust`, or run `:trust path/to/.dictation.md` beforehand. The plugin warns once per session if the instructions and notes together exceed 10000 characters. The plugin's README section "What the model sees" shows the full cleanup prompt.
+
+#### Transcript history
+
+I have `history = { enabled = true }` set, so every dictation is saved to `~/.local/share/nvim/openwhispr/` (the default `history.dir`). The point is to collect my recordings together with corrected transcripts, to improve the recognition of technical terms later, eventually by fine-tuning Parakeet.
+
+Each dictation appends one line to `history.jsonl` with an id, the time, the duration, the transcription backend, the filetype, the raw Parakeet transcript (`raw`), and the result of the cleanup (`cleaned`, or `cleanup_error` if it failed). The recording itself is kept as `audio/<id>.wav`, about 2 MB per minute of speech. The surrounding buffer text that is sent to Claude for context is not stored.
+
+To review, run `:OpenWhispr history`. It opens a buffer with all entries not reviewed yet, each showing a raw, a cleaned, and a verbatim line. Edit the verbatim line to what I actually said, including fillers and self-corrections: it describes the audio, not the text that should end up in the file. `<CR>` on an entry plays its recording (with `afplay`). An empty verbatim line marks a recording as unusable. `:w` saves the verbatim lines and marks every entry still in the buffer as reviewed; to leave an entry for later, delete its lines from the buffer before saving. `:OpenWhispr history all` lists the reviewed entries as well.
