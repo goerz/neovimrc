@@ -48,6 +48,8 @@ return {
               if vim.fn.search('[^\\x00-\\x7F\\u00C0-\\u017F\\u00A0-\\u00BB\\u2010-\\u203A]', 'nw') ~= 0 then
                 table.insert(statusline_flags, "α")
               end
+              -- Add "◌" if text not in NFC, "≢" if equivalent forms are mixed
+              table.insert(statusline_flags, require('unicode_check').flags(0))
             end
             -- Add "␣" if trailing whitespace or mixed tab/space at the beginning of a line
             if vim.fn.search('\\s\\+$', 'nw') ~= 0 or vim.fn.search('^\\t\\+ ', 'nw') ~= 0 or vim.fn.search('^ \\+\\t', 'nw') ~= 0 then

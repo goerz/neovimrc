@@ -247,6 +247,10 @@ vim.api.nvim_create_user_command('LiterateOff', function()
   vim.cmd("edit")
 end, {})
 
+-- Unicode normalization: NFC on save for prose filetypes, statusline flags,
+-- :NFC and :UnicodeCheck commands
+require('unicode_check').setup()
+
 -- Command abbreviation
 vim.cmd([[cabbr AB 'a,'b]])
 
